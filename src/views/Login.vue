@@ -2,10 +2,10 @@
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="login-box">
       <h3>登陆系统</h3>
       <el-form-item prop="account">
-        <el-input :model="ruleForm2.account" placeholder="账号"></el-input>
+        <el-input v-model="ruleForm2.account" placeholder="账号"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" :model="ruleForm2.password" placeholder="密码"></el-input>
+        <el-input type="password" v-model="ruleForm2.password" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button class="sub-button" type="primary" @click="submit">登陆</el-button>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-
+import {requestLogin} from '@/api/api'
 
 export default {
   name: 'login',
@@ -24,8 +24,8 @@ export default {
   data(){
       return{
         ruleForm2: {
-          account: '123',
-          password: '123123'
+          account: '',
+          password: ''
         },
           rules2: {
 
@@ -43,9 +43,24 @@ export default {
       submit(){
           this.$refs.ruleForm2.validate((valid)=>{
             if(valid){
-                alert("success")
+                
+                var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.password };
+                requestLogin(loginParams).then(data => {
+                
+              //NProgress.done();
+                let { msg, code, user } = data;
+                if (code !== 200) {
+                    this.$message({
+                    message: msg,
+                     type: 'error'
+                });
+                } else {
+                    sessionStorage.setItem('user', JSON.stringify(user));
+                    this.$router.push({ path: '/table' });
+                    }
+                });
             }else{
-                alert("没验证")
+                
                 return false;
             }
           })
