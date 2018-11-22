@@ -9,7 +9,10 @@
   background-color="#20a0ff"
   text-color="#fff"
   active-text-color="#ffd04b">
-  
+  <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+    <el-radio-button :label="false">展开</el-radio-button>
+    <el-radio-button :label="true">收起</el-radio-button>
+  </el-radio-group>
   
   <el-col :span="4" class="user-info">
 				<el-dropdown trigger="hover">
@@ -45,15 +48,20 @@ export default {
 </script>
 
 <style lang="scss">
-.head{
+.head {
   height: 60px;
   line-height: 60px;
 }
 .user-info {
   float: right;
   color: white;
-  .userinfo-inner{
+  .userinfo-inner {
     color: white;
+    cursor: pointer;
   }
+}
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
 }
 </style>

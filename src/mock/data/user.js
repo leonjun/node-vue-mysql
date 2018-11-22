@@ -5,13 +5,13 @@ const LoginUsers = [
     username: 'admin',
     password: '123456',
     avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-    name: '张某某'
+    name: '李军'
   }
 ];
 
 const Users = [];
 
-for (let i = 0; i < 86; i++) {
+for (let i = 0; i < 11; i++) {
   Users.push(Mock.mock({
     id: Mock.Random.guid(),
     name: Mock.Random.cname(),
