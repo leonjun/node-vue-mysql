@@ -2,10 +2,10 @@
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="login-box">
       <h3>登陆系统</h3>
       <el-form-item prop="account">
-        <el-input v-model="ruleForm2.account" placeholder="账号"></el-input>
+        <el-input v-model="ruleForm2.account" placeholder="默认账号：admin"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" v-model="ruleForm2.password" placeholder="密码"></el-input>
+        <el-input type="password" v-model="ruleForm2.password" placeholder="默认密码:123456"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button class="sub-button" type="primary" @click="submit">登陆</el-button>

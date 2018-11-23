@@ -44,8 +44,8 @@
     </el-menu>
     </aside>
     <!--右侧内容--> 
-    <div class="container-box">
-      <div>
+    <el-col :span="24" class="container-box">
+        
         <!--<strong class="title">{{$route.name}}</strong>-->
 						<el-breadcrumb separator="/">
 
@@ -62,10 +62,10 @@
             <router-view></router-view>
           </transition>
         </el-col>
-      </div>
+      
       
 						
-    </div>
+    </el-col>
     
   
 </el-col> 
@@ -95,6 +95,25 @@ export default {
       this.isCollapse = !this.isCollapse;
     },
     handleselect:function(){
+
+    },
+    //退出
+    logout(){
+      let _this=this;
+      this.$confirm("确认退出?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }) .then(() => {
+         sessionStorage.removeItem("user");
+        _this.$router.push({path:"/login"})
+        }).catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消退出"
+          });
+        });
+      
 
     }
   },
@@ -162,9 +181,16 @@ export default {
   top: 0;
   bottom: 0;
   width: 100%;
+  flex: 1;
+  
+  .content-wrapper{
+    box-sizing: border-box;
+    
+  }
   .main {
     height: 100%;
     display: flex;
+    
     aside {
       .el-menu {
         height: 100%;
