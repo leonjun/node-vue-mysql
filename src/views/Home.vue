@@ -3,7 +3,7 @@
    <!--顶部-->
      <el-menu  class="el-menu-demo head" background-color="#20a0ff">
   <el-col :span="10">
-				<div class="tools" @click="collapse" :collapse-transition="false">
+				<div class="tools" @click="collapse">
 					<i class="fa fa-align-justify"></i>
 				</div>
 	</el-col>
@@ -22,13 +22,13 @@
 </el-menu>
 
 
- <section class="main" >
-   <div class="ov">
+ <el-col :span="24" class="main">
+   
     <!--左侧导航-->
-    <div :class="isCollapse?'menu-collapsed leftnav':'menu-expanded leftnav'">
+    <aside :class="isCollapse?'menu-collapsed':'menu-expanded'">
 
     
-    <el-menu :default-active="this.$route.path"  router  class="el-menu-vertical-demo el-left-menu" @open="handleOpen" @close="handleClose"  @select="handleselect" :collapse="isCollapse">
+    <el-menu  :default-active="this.$route.path" :unique-opened="true"  router  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"  @select="handleselect" :collapse="isCollapse">
         <template v-for="(item,index) in this.$router.options.routes" v-if="!item.hidden">
           <el-submenu  :index="index+''"  :key="index" v-if="!item.leaf">
             <template slot="title">
@@ -43,7 +43,7 @@
         </template>
 
     </el-menu>
-    </div>
+    </aside>
     
     <!--右侧内容--> 
     <div :span="24" class="container-box" :class="isCollapse?'right-collapsed':'right-expanded'">
@@ -68,9 +68,9 @@
       
 						
     </div>
-   </div>
+   
   
- </section> 
+ </el-col> 
 
  </el-row>
 </template>
@@ -203,7 +203,7 @@ export default {
     }
     .ov:after{display:block;clear:both;content:"";visibility:hidden;height:0}
     .ov::before{display:block;clear:both;content:"";visibility:hidden;height:0}
-    .leftnav{
+    aside{
       float:left;
       height: 100%;
     }

@@ -4,6 +4,7 @@ import Home from "./views/Home.vue";
 import Table from "./views/table/Table";
 import Form from "./views/table/Form";
 import Login from "./views/Login";
+import Echart from "./views/table/Echarts"
 Vue.use(Router);
 
 export default new Router({
@@ -45,12 +46,21 @@ export default new Router({
     },
     {
       path: "/",
-      component: Home,
-      
+      component: Home,     
       iconCls: "el-icon-message", //图标样式class
       leaf:true,
       children: [
         { path: "/form", component: Form, name: "电风扇" ,leaf:true,},
+        
+      ]
+    },
+    {
+      path: "/",
+      component: Home,     
+      iconCls: "fa fa-bar-chart", //图标样式class
+      name:"eCharts",
+      children: [
+        { path: "/echart", component: Echart, name: "eCharts"},
         
       ]
     }

@@ -7,11 +7,12 @@
           <el-input v-model="pages.name" placeholder="输入姓名查询"></el-input>
         </el-form-item>
         <el-form-item>
-					<el-button type="primary" v-on:click="getUsers">查询</el-button>
+					<el-button type="primary" @click="getUsers">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">新增</el-button>
 				</el-form-item>
+        
       </el-form>
     </el-col>
   <!--搜索框-->
@@ -408,6 +409,9 @@ export default {
         return "未知"
       }
       //return row.sex == 1 ? '男' : row.sex == 0 ? '女' :  '未知' ;
+    },
+    refresh(){
+      this.$router.push({ path: '/table' });
     }
   },
   mounted() {
