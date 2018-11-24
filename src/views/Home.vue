@@ -1,9 +1,9 @@
 <template>
  <el-row class="container">
    <!--顶部-->
-     <el-menu class="el-menu-demo head" background-color="#20a0ff">
+     <el-menu  class="el-menu-demo head" background-color="#20a0ff">
   <el-col :span="10">
-				<div class="tools" @click="collapse">
+				<div class="tools" @click="collapse" :collapse-transition="false">
 					<i class="fa fa-align-justify"></i>
 				</div>
 	</el-col>
@@ -21,10 +21,11 @@
   
 </el-menu>
 
-<!--左侧导航-->
- <el-col :span="24" class="main" >
- 
-    <aside>
+
+ <section class="main" >
+   <div class="ov">
+    <!--左侧导航-->
+    <div :class="isCollapse?'menu-collapsed leftnav':'menu-expanded leftnav'">
 
     
     <el-menu :default-active="this.$route.path"  router  class="el-menu-vertical-demo el-left-menu" @open="handleOpen" @close="handleClose"  @select="handleselect" :collapse="isCollapse">
@@ -42,10 +43,11 @@
         </template>
 
     </el-menu>
-    </aside>
+    </div>
+    
     <!--右侧内容--> 
-    <el-col :span="24" class="container-box">
-        
+    <div :span="24" class="container-box" :class="isCollapse?'right-collapsed':'right-expanded'">
+        <el-col :span="24">
         <!--<strong class="title">{{$route.name}}</strong>-->
 						<el-breadcrumb separator="/">
 
@@ -62,13 +64,13 @@
             <router-view></router-view>
           </transition>
         </el-col>
-      
+        </el-col>
       
 						
-    </el-col>
-    
+    </div>
+   </div>
   
-</el-col> 
+ </section> 
 
  </el-row>
 </template>
@@ -135,6 +137,9 @@ export default {
 </script>
 
 <style lang="scss">
+.clear{
+  clear: both;
+}
 .head {
   height: 60px;
   line-height: 60px;
@@ -187,18 +192,47 @@ export default {
     box-sizing: border-box;
     
   }
+  .main::before{
+    display: table;
+  }
   .main {
     height: 100%;
-    display: flex;
+    .ov{
+      
+      height: 100%;
+    }
+    .ov:after{display:block;clear:both;content:"";visibility:hidden;height:0}
+    .ov::before{display:block;clear:both;content:"";visibility:hidden;height:0}
+    .leftnav{
+      float:left;
+      height: 100%;
+    }
+    .menu-collapsed{
+				//flex: 0 0 60px;
+				width: 60px;
+			}
+		.menu-expanded{
+        //flex: 0 0 200px;
+				width: 200px;
+		}
+    .right-collapsed{
+				//flex: 0 0 60px;
+				width:calc(100% - 60px - 40px);
+       
+			}
+		.right-expanded{
+        //flex: 0 0 200px;
+				width:calc(100% - 200px - 40px);
+		}
     
-    aside {
       .el-menu {
         height: 100%;
       }
-    }
+    
     .container-box{
-      width: 100%;
+      
       padding: 20px;
+      float:left;
     }
   }
   .el-submenu__title:hover{
