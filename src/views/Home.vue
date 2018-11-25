@@ -2,8 +2,8 @@
  <el-row class="container">
    <!--顶部-->
      <el-menu  class="el-menu-demo head" background-color="#20a0ff">
-  <el-col :span="10">
-				<div class="tools" @click="collapse">
+  <el-col :span="5" >
+				<div :class="isCollapse?'tools2':'tools'" @click="collapse">
 					<i class="fa fa-align-justify"></i>
 				</div>
 	</el-col>
@@ -162,7 +162,7 @@ export default {
   }
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
+  width: 150px;
   min-height: 400px;
   .el-menu {
     height: 100%;
@@ -173,20 +173,28 @@ export default {
   background-color: #eef1f6;
   padding-left: 0;
 }
+
 .tools {
-  padding: 0px 23px;
-  width: 14px;
+  text-align: left;
+  height: 60px;
+  padding-left: 150px;
+  line-height: 60px;
+  cursor: pointer;
+}
+.tools2 {
+  text-align: center;
+  width: 60px;
   height: 60px;
   line-height: 60px;
   cursor: pointer;
 }
-
 .container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  
   width: 100%;
-  flex: 1;
+  position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
   
   .content-wrapper{
     box-sizing: border-box;
@@ -194,52 +202,56 @@ export default {
   }
   .main::before{
     display: table;
+    content: "";
+  }
+  .main::after{
+    display: table;
+    content: "";
   }
   .main {
-    height: 100%;
-    .ov{
-      
-      height: 100%;
-    }
-    .ov:after{display:block;clear:both;content:"";visibility:hidden;height:0}
-    .ov::before{display:block;clear:both;content:"";visibility:hidden;height:0}
-    aside{
-      float:left;
-      height: 100%;
-    }
-    .menu-collapsed{
-				//flex: 0 0 60px;
-				width: 60px;
-			}
-		.menu-expanded{
-        //flex: 0 0 200px;
-				width: 200px;
-		}
-    .right-collapsed{
-				//flex: 0 0 60px;
-				width:calc(100% - 60px - 40px);
-       
-			}
-		.right-expanded{
-        //flex: 0 0 200px;
-				width:calc(100% - 200px - 40px);
-		}
+    position: absolute;
+    top: 60px;
+    display: flex;
+    bottom: 0;
+    overflow: hidden;
     
+    aside{
+      text-align: left;
       .el-menu {
         height: 100%;
       }
+    }
+    
+    .menu-collapsed{
+				flex: 0 0 60px;
+				width: 60px;
+			}
+		.menu-expanded{
+        flex: 0 0 150px;
+				width: 150px;
+		}
+    
+    
+      
     
     .container-box{
       
       padding: 20px;
-      float:left;
+      
+      flex:1;
+      overflow-y: scroll;
     }
+    
   }
   .el-submenu__title:hover{
     background-color: #d1dbe5;
   }
-  .el-menu-item:focus, .el-menu-item:hover{
+  .el-menu-item:hover{
     background-color: #d1dbe5;
   }
+  .el-menu-item:focus, .el-menu-item:hover{
+     background-color: #d1dbe5;
+  }
+  
 }
 </style>

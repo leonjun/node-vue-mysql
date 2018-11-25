@@ -2,13 +2,13 @@
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="login-box">
       <h3>登陆系统</h3>
       <el-form-item prop="account">
-        <el-input v-model="ruleForm2.account" placeholder="默认账号：admin"></el-input>
+        <el-input v-model="ruleForm2.account" placeholder="默认账号：admin" @keyup.enter.native="submit"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" v-model="ruleForm2.password" placeholder="默认密码:123456"></el-input>
+        <el-input type="password" v-model="ruleForm2.password" placeholder="默认密码:123456" @keyup.enter.native="submit"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="sub-button" type="primary" @click="submit">登陆</el-button>
+        <el-button class="sub-button" type="primary" @click="submit" :loading="loading">登陆</el-button>
       </el-form-item>
   </el-form>
 </template>
@@ -23,6 +23,7 @@ export default {
   },
   data(){
       return{
+          loading:false,
         ruleForm2: {
           account: '',
           password: ''
@@ -43,7 +44,7 @@ export default {
       submit(){
           this.$refs.ruleForm2.validate((valid)=>{
             if(valid){
-                
+                this.loading=true;
                 var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.password };
                 requestLogin(loginParams).then(data => {
                 
@@ -53,19 +54,22 @@ export default {
                     this.$message({
                     message: msg,
                      type: 'error'
-                });
+                    });
+                    this.loading=false;
                 } else {
+                    this.loading=false;
                     sessionStorage.setItem('user', JSON.stringify(user));
                     this.$router.push({ path: '/table' });
                     }
                 });
+                
             }else{
                 
                 return false;
             }
           })
-      }
-  }
+      },
+  },
 }
 </script>
 
