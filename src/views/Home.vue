@@ -220,6 +220,12 @@ export default {
       .el-menu {
         height: 100%;
       }
+      .el-submenu__title i{
+        margin-right: 4px;
+      }
+      .el-menu-item i{
+        margin-right: 4px;
+      }
     }
     
     .menu-collapsed{
@@ -230,14 +236,18 @@ export default {
         flex: 0 0 150px;
 				width: 150px;
 		}
-    
+    .el-submenu{
+      .el-menu-item{
+        min-width: 150px;
+      }
+    } 
     
       
     
     .container-box{
       
       padding: 20px;
-      
+      background-color: #ffffff;
       flex:1;
       overflow-y: scroll;
     }
@@ -253,5 +263,8 @@ export default {
      background-color: #d1dbe5;
   }
   
+}
+.el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+  min-width: 140px;
 }
 </style>

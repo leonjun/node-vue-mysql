@@ -27,11 +27,12 @@ export default new Router({
       path: "/",
       component: Home,
       name: "导航一",
-      iconCls: "el-icon-message", //图标样式class
+      iconCls: "fa fa-table", //图标样式class
 
       children: [
-        { path: "/table", component: Table, name: "Table" },
-        { path: "/page3", component: Form, name: "页面4" }
+        { path: "/page3", component: Form, name: "说明" },
+        { path: "/table", component: Table, name: "Table" }
+        
       ]
     },
     {
@@ -47,10 +48,10 @@ export default new Router({
     {
       path: "/",
       component: Home,     
-      iconCls: "el-icon-message", //图标样式class
+      iconCls: "fa fa-file", //图标样式class
       leaf:true,
       children: [
-        { path: "/form", component: Form, name: "电风扇" ,leaf:true,},
+        { path: "/form", component: Form, name: "导航三" ,leaf:true,},
         
       ]
     },
