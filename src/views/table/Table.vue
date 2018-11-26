@@ -399,10 +399,11 @@ export default {
       });
     },
     //男女显示
-    formatSex(row) {
+    formatSex(row,column){
+      console.log(row);
       if(row.sex == 1){
         return "男";
-      }else if(row.sex == 2){
+      }else if(row.sex == 0){
         return "女";
         
       }else{
