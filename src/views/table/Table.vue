@@ -12,6 +12,10 @@
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">新增</el-button>
 				</el-form-item>
+        <el-form-item>
+					<el-button type="primary" @click="handleAddTest"  >新增(引外部页面)</el-button>
+           
+				</el-form-item>
         
       </el-form>
     </el-col>
@@ -121,7 +125,7 @@
     <!--编辑弹窗结束-->
     <!--新增弹窗-->
     <el-dialog title="新增" v-show="addshow" :visible.sync="addshow" >
-      <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrule">
+      <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrules">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
@@ -144,22 +148,30 @@
       <div slot="footer" class="dialog-footer">
 				<el-button @click="addshow = false">取消</el-button>
 				<el-button type="primary" @click="addSubmit" :loading="loading">提交</el-button>
+       
 			</div>
     </el-dialog>
     <!--编辑弹窗结束-->
 
   </el-col>
+  <addtest ref="addtest" v-if="addtestshow" @abd="getUsers"></addtest>
   </el-col>
   
 </template>
 
 <script>
 import util from "@/common/js/util";
+import addtest from "@/components/templete/AddUser";
+import {init} from "@/components/templete/AddUser";
 //import NProgress from 'nprogress'
 import { getUserListPage, removeUser, editUser, addUser,batchRemoveUser } from "@/api/api";
 export default {
+  components:{
+    addtest
+  },
   data() {
     return {
+      addtestshow:false,
       pages: {
         page: 1,
         total: 0,
@@ -193,7 +205,7 @@ export default {
       rule: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       },
-      addrule: {
+      addrules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       }
     };
@@ -384,7 +396,7 @@ export default {
     },
     
     //获取用户列表
-    getUsers() {
+    getUsers(v) {
       let data = {
         name: this.pages.name,
         page: this.pages.page,
@@ -392,7 +404,7 @@ export default {
       };
       this.listLoading = true;
       getUserListPage(data).then(res => {
-        console.log(res);
+        
         this.users = res.data.users;
         this.pages.total = res.data.total;
         this.listLoading = false;
@@ -400,10 +412,10 @@ export default {
     },
     //男女显示
     formatSex(row){
-      console.log(row);
-      if(row.sex == 1){
+      
+      if(row.sex =="1"){
         return "男";
-      }else if(row.sex == 0){
+      }else if(row.sex == "0"){
         return "女";       
       }else{
         return "未知"
@@ -412,11 +424,20 @@ export default {
     },
     refresh(){
       this.$router.push({ path: '/table' });
+    },
+    //
+    handleAddTest(){
+      
+      this.addtestshow=true;
+      this.$nextTick(()=>{
+        
+        this.$refs.addtest.init();
+      })
     }
   },
   mounted() {
     this.getUsers();
-  }
+  },
 };
 </script>
 

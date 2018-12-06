@@ -125,10 +125,10 @@ export default {
     let session=sessionStorage.getItem("user");
     if(session){
       session=JSON.parse(session);
-      console.log(session);
+      
       this.sysName=session.name||"";
       this.sysImg=session.avatar||"";
-      console.log(this.sysName)
+      
     }
     
     
