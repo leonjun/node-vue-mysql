@@ -1,7 +1,7 @@
 <template>
  
      <!--新增弹窗-->
-    <el-dialog title="新增"  :visible.sync="showshow" >
+    <el-dialog :title="isAdd?'新增':'编辑'"  :visible.sync="showshow" >
       <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrule">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name"></el-input>
@@ -24,7 +24,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
 				<el-button @click="showshow = false">取消</el-button>
-				<el-button type="primary"  @click="adSubmit" :loading="loading">提交</el-button>
+				<el-button type="primary"  @click="submit" :loading="loading">提交</el-button>
 			</div>
     </el-dialog>
     <!--编辑弹窗结束-->
@@ -32,8 +32,9 @@
 </template>
 
 <script>
-import { getUserListPage, removeUser, editUser, addUser,batchRemoveUser } from "@/api/api";
-import {getUsers} from "@/views/table/Table"
+import util from "@/common/js/util";
+import {editUser, addUser } from "@/api/api";
+//import {getUsers} from "@/views/table/Table"
  export default {
    props:["abdc"],
    data () {
@@ -41,6 +42,7 @@ import {getUsers} from "@/views/table/Table"
       loading:false,
       showshow:false,
       addshow:false,
+      isAdd:true,
          //存放新增数据
       addForm: {
         name: "",
@@ -61,15 +63,16 @@ import {getUsers} from "@/views/table/Table"
               console.log("131231232")
            });
        },
-       adSubmit() {
+      submit() {
       let data = Object.assign({}, this.addForm);
-      
-      this.$refs.addForm.validate((valid) => {
+     
+      if(this.isAdd){
+          this.$refs.addForm.validate((valid) => {
         if (valid) {
           this.$confirm("确认提交?", "提示", {}).then(() => {
               let data = Object.assign({}, this.addForm);
               data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');//日期转换格式
-              console.log(data);
+              
               this.loading = true;
               addUser(data).then(res => {
                 this.loading = false;
@@ -96,6 +99,41 @@ import {getUsers} from "@/views/table/Table"
           return false;
         }
       });
+      }else{
+        this.$refs.addForm.validate((valid) =>{
+        if(valid){
+            this.$confirm("确认提交?", "提示", {}).then(() => {
+            let data = Object.assign({}, this.addForm);
+            data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');
+            this.loading = true;
+            
+            editUser(data).then(res => {
+              this.loading = false;
+
+              this.$message({
+                type: "success",
+                message: "修改成功!"
+              });
+              this.$refs["addForm"].resetFields();//重置
+              this.showshow = false;
+
+              this.$emit('abd');
+            });
+          })
+          .catch(() => {
+            
+            this.$message({
+              type: "info",
+              message: "已取消修改"
+            });
+          });
+
+        }else{
+          return false;
+        }
+      })
+      }
+      
     },
    }
  }

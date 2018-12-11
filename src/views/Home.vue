@@ -129,6 +129,8 @@ export default {
       this.sysName=session.name||"";
       this.sysImg=session.avatar||"";
       
+    }else{
+      this.$router.push({ path: '/login' });
     }
     
     

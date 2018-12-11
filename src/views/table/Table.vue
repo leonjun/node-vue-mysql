@@ -38,6 +38,7 @@
     <el-table-column
       prop="name"
       label="姓名"
+      width="100"
       sortable
       >
       
@@ -45,6 +46,7 @@
     <el-table-column
       prop="sex"
       label="性别"
+      width="120"
       sortable
       :formatter="formatSex"
       >
@@ -52,6 +54,7 @@
     <el-table-column
       prop="age"
       label="年龄"
+      width="100"
       sortable
       show-overflow-tooltip>
     </el-table-column>
@@ -71,11 +74,18 @@
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          @click="handleEdit(scope.$index, scope.row)">编辑
+        </el-button>
+        <el-button
+          size="mini"
+          @click="handleEditout(scope.$index, scope.row)">编辑2
+        </el-button>
+
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          @click="handleDelete(scope.$index, scope.row)">删除
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -277,12 +287,23 @@ export default {
       this.editshow=false;
       this.$refs[rel].resetFields();
     },
+    //编辑按钮（外部页面）
+    handleEditout(index, row){
+      this.addtestshow=true;
+      this.$nextTick(()=>{
+        
+        this.$refs.addtest.init();
+        this.$refs.addtest.isAdd=false;
+
+        this.$refs.addtest.addForm=Object.assign({}, row);
+      })
+    },
     //编辑按钮
     handleEdit(index, row) {
       this.editshow = true;
       this.editForm = Object.assign({}, row);
 
-      console.log(this.editForm);
+      //console.log(this.editForm);
     },
     //编辑提交
     editSubmit() {
@@ -425,13 +446,21 @@ export default {
     refresh(){
       this.$router.push({ path: '/table' });
     },
-    //
+    //新增引外部页面
     handleAddTest(){
       
       this.addtestshow=true;
       this.$nextTick(()=>{
         
         this.$refs.addtest.init();
+        this.$refs.addtest.isAdd=true;
+        this.$refs.addtest.addForm={
+           name: "",
+            sex: "",
+            addr: "",
+            age: "",
+            birth: ""
+        }
       })
     }
   },
