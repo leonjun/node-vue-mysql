@@ -4,11 +4,12 @@ import Home from "./views/Home.vue";
 import Table from "./views/table/Table";
 import Form from "./views/table/Form";
 import Login from "./views/Login";
-import Echart from "./views/table/Echarts"
+import Echart from "./views/table/Echarts";
+import Vuex from "@/views/vuex/components/vuex";
 Vue.use(Router);
 
 export default new Router({
-  mode: "history",
+  //mode: "history",
   base: process.env.BASE_URL,
   routes: [
     {
@@ -30,7 +31,7 @@ export default new Router({
       iconCls: "fa fa-table", //图标样式class
 
       children: [
-        { path: "/page3", component: Form, name: "说明" },
+        { path: "/vuex", component: Vuex, name: "vuex" },
         { path: "/table", component: Table, name: "Table" }
         
       ]
