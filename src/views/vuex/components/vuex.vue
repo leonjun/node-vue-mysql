@@ -12,13 +12,18 @@
         </el-form>
      </el-col>
      <el-col>
-         <p v-for="(item,index) in getTodoLists" :key="index">
-            <span v-show="!item.isEdit"> {{item.text}}</span>
-            <input v-show="item.isEdit" v-model="item.text" />
-            <el-button v-show="!item.isEdit &&!item.isDone" size="small" @click="editTodo(item)">修改</el-button>
-            <el-button v-show="item.isEdit &&!item.isDone" size="small" @click="okTodo(item)">确认</el-button>
-            <el-button v-show="!item.isDone" size="small" @click="done(item)">完成</el-button>
-        </p>
+         <div class="clearfix" v-for="(item,index) in getTodoLists" :key="index">
+             <el-col :span="12">
+                  <span v-show="!item.isEdit"> {{item.text}}</span>
+                <input v-show="item.isEdit" v-model="item.text" />
+             </el-col>
+            <el-col :span="12">
+                <el-button v-show="!item.isEdit &&!item.isDone" size="small" @click="editTodo(item)">修改</el-button>
+                <el-button v-show="item.isEdit &&!item.isDone" size="small" @click="okTodo(item)">确认</el-button>
+                <el-button v-show="!item.isDone" size="small" @click="done(item)">完成</el-button>
+            </el-col>
+            
+        </div>
 
      </el-col>
     <el-col>
@@ -84,7 +89,7 @@
  }
 </script>
 
-<style>
+<style scoped>
 .activeType{
     background-color: #42b983 !important;
     color: white !important;
@@ -96,6 +101,15 @@
      border: 1px solid #dcdfe6;
      padding: 0 4px;
      background: none;
-    
+    text-align: center;
+ }
+ .clearfix{
+     width: 50%;
+     margin: 0 auto;
+     overflow: hidden;
+ }
+ .clearfix >div{
+     margin: 6px 0;
+     line-height: 32px;
  }
 </style>
