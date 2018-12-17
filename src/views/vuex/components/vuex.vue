@@ -7,6 +7,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button @click="addTodo">新增</el-button>
+                
             </el-form-item>
         </el-form>
      </el-col>
@@ -14,7 +15,9 @@
          <p v-for="(item,index) in getTodoLists" :key="index">
             <span v-show="!item.isEdit"> {{item.text}}</span>
             <input v-show="item.isEdit" v-model="item.text" />
-            <el-button size="small" @click="editTodo(item)">修改</el-button>
+            <el-button v-show="!item.isEdit &&!item.isDone" size="small" @click="editTodo(item)">修改</el-button>
+            <el-button v-show="item.isEdit &&!item.isDone" size="small" @click="okTodo(item)">确认</el-button>
+            <el-button v-show="!item.isDone" size="small" @click="done(item)">完成</el-button>
         </p>
 
      </el-col>
@@ -50,6 +53,12 @@
        },
        editTodo:function(item){
            item.isEdit=true;
+       },
+       done:function(item){
+           this.$store.dispatch("doneTodo",item.id);
+       },
+       okTodo:function(item){
+           item.isEdit=false;
        }
    },
    computed:{

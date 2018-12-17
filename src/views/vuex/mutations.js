@@ -10,5 +10,12 @@ export default {
     },
     [type.SELECT_TYPE](state,typetext){
         state.selects=typetext;
+    },
+    [type.DONETODO](state,id){
+        state.todoInfos.map((item) =>{
+            if(item.id==id){
+                item.isDone=true;
+            }
+        })
     }
 }

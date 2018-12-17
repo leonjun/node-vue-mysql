@@ -5,5 +5,8 @@ export default {
     },
     selectType({commit},typetext){
         commit(type.SELECT_TYPE,typetext);
-    }
+    },
+    doneTodo({commit},id){
+        commit(type.DONETODO,id);
+    },
 }
