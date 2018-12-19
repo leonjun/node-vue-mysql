@@ -6,6 +6,8 @@ import Form from "./views/table/Form";
 import Login from "./views/Login";
 import Echart from "./views/table/Echarts";
 import Vuex from "@/views/vuex/components/vuex";
+import LifeCycle from "./views/table/LifeCycle";
+
 Vue.use(Router);
 
 export default new Router({
@@ -43,7 +45,7 @@ export default new Router({
       iconCls: "fa fa-id-card-o",
       children: [
         { path: "/page4", component: Form, name: "页面4" },
-        { path: "/page5", component: Form, name: "页面5" }
+        { path: "/page5", component: LifeCycle, name: "LifeCycle" }
       ]
     },
     {
