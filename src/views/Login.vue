@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item prop="verify">
         <el-col :span="16">
-            <el-input  v-model="ruleForm2.verify" placeholder="请输入验证码"></el-input>
+            <el-input  v-model="ruleForm2.verify" placeholder="请输入验证码" @keyup.enter.native="submit"></el-input>
         </el-col>
                   <!-- 验证码 -->
         <el-col :span="8" >
