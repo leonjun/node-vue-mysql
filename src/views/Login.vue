@@ -97,6 +97,9 @@ export default {
           })
       },
   },
+  created(){
+      sessionStorage.removeItem("user");
+  }
 }
 </script>
 
