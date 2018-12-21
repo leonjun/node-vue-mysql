@@ -2,11 +2,12 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Table from "./views/table/Table";
-import Form from "./views/table/Form";
+//import Form from "./views/table/Form";
 import Login from "./views/Login";
 import Echart from "./views/table/Echarts";
 import Vuex from "@/views/vuex/components/vuex";
 import LifeCycle from "./views/table/LifeCycle";
+import Promise from "./views/table/Promise";
 
 Vue.use(Router);
 
@@ -44,8 +45,8 @@ export default new Router({
       name: "导航二",
       iconCls: "fa fa-id-card-o",
       children: [
-        { path: "/page4", component: Form, name: "页面4" },
-        { path: "/page5", component: LifeCycle, name: "LifeCycle" }
+        //{ path: "/page4", component: Form, name: "页面4" },
+        { path: "/LifeCycle", component: LifeCycle, name: "LifeCycle" }
       ]
     },
     {
@@ -54,7 +55,7 @@ export default new Router({
       iconCls: "fa fa-file", //图标样式class
       leaf:true,
       children: [
-        { path: "/form", component: Form, name: "导航三" ,leaf:true,},
+        { path: "/promise", component: Promise, name: "Promise" ,leaf:true,},
         
       ]
     },
