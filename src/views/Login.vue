@@ -7,6 +7,17 @@
       <el-form-item prop="password">
         <el-input type="password" v-model="ruleForm2.password" placeholder="默认密码:123456" @keyup.enter.native="submit"></el-input>
       </el-form-item>
+      <el-form-item prop="verify">
+        <el-col :span="16">
+            <el-input  v-model="ruleForm2.verify" placeholder="请输入验证码"></el-input>
+        </el-col>
+                  <!-- 验证码 -->
+        <el-col :span="8" >
+            <div id="v_container"></div>
+            <span class="el-form-item__error" v-show="codeTooltip">验证码错误</span>
+        </el-col>
+        
+      </el-form-item>
       <el-form-item>
         <el-button class="sub-button" type="primary" @click="submit" :loading="loading">登陆</el-button>
       </el-form-item>
@@ -15,7 +26,7 @@
 
 <script>
 import {requestLogin} from '@/api/api'
-
+import GVerify from "@/utils/gVerify.js";
 export default {
   name: 'login',
   components: {
@@ -23,10 +34,14 @@ export default {
   },
   data(){
       return{
-          loading:false,
+          
+          verifyCode:null,
+        codeTooltip:false,
+        loading:false,
         ruleForm2: {
           account: '',
-          password: ''
+          password: '',
+          verify:"",
         },
           rules2: {
 
@@ -36,15 +51,27 @@ export default {
             ],
             password: [
                 { required: true, message: '请输入密码', trigger: 'blur' },
+            ],
+            verify:[
+                { required: true, message: '请输入验证码', trigger: 'blur' },
             ]
           }
       }
+  },
+  mounted(){
+       this.verifyCode = new GVerify("v_container");
   },
   methods:{
       submit(){
           this.$refs.ruleForm2.validate((valid)=>{
             if(valid){
                 this.loading=true;
+                this.codeTooltip = false;
+                let bool = this.verifyCode.validate(this.ruleForm2.verify);
+                if (!bool) {
+                    this.loading=false;
+                    return (this.codeTooltip = true);
+                }
                 var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.password };
                 requestLogin(loginParams).then(data => {
                 
@@ -87,5 +114,12 @@ export default {
     }
     .sub-button{
         width: 100%;
+    }
+    #verifyCanvas{
+        height: 40px;
+        width: 100%
+    }
+    #v_container{
+        height: 40px;
     }
 </style>
