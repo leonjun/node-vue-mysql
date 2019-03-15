@@ -491,6 +491,9 @@ export default {
   .el-form--inline {
     .el-form-item {
       margin-bottom: 0;
+      .el-button{
+        background-color: #42b983;
+      }
     }
   }
 }
