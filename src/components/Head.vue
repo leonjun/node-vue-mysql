@@ -6,7 +6,7 @@
   class="el-menu-demo"
   mode="horizontal"
   @select="handleSelect"
-  background-color="#20a0ff"
+  background-color="#42b983"
   text-color="#fff"
   active-text-color="#ffd04b">
   <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">

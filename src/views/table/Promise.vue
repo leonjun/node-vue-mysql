@@ -14,9 +14,8 @@ export default {
  methods:{
      tpromise(){
          var p = new Promise(function(resolve, reject){
-    //做一些异步操作
         setTimeout(function(){
-            var num = Math.ceil(Math.random()*10); //生成1-10的随机数
+            var num = Math.ceil(Math.random()*10);
             if(num<5){
                 resolve('随便什么数据'+num);
                 console.log('执行完成');

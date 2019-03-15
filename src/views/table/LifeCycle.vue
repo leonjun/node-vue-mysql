@@ -53,42 +53,34 @@ export default {
     }
  },
  beforeCreate(){
-    console.log( this.$el);
-    console.log( this.$data);
-    
-    console.log("-------------组件创立前，什么都没有");
-    
+     console.log("beforeCreate")
+    console.log("this.$el"+ this.$el);
+    console.log("this.$data"+ this.$data);
+    console.log("-------------组件创立前，什么都没有"); 
  },
  created(){
-   console.log( this.$el);
-    console.log( this.$data);
-   
-    console.log("-------------组件创建，无DOM有data")
-    
+     console.log("created");
+    console.log( this.$el);
+    console.log( this.$data);  
+    console.log("-------------组件创建，无DOM有data")  
  },
  beforeMount(){
+     console.log("beforeMount")
     console.log( this.$el);
-    console.log( this.$data);
-   
-    console.log("-----------挂载前，无DOM有data");
-   
+    console.log( this.$data);  
+    console.log("-----------挂载前，无DOM有data"); 
  },
  mounted(){
+     console.log("mounted");
     console.log( this.$el);
-    console.log( this.$data);
-    
-    
+    console.log( this.$data);   
      console.log("----------挂载完成");
-     
  },
- beforeUpdate(){
-    
+ beforeUpdate(){   
      console.log("-------------------beforeUpdate")
  },
- updated(){
-     
-     console.log("-------------------update");
-     
+ updated(){   
+     console.log("-------------------update");   
  }
 }
 </script>

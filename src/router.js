@@ -30,7 +30,7 @@ export default new Router({
     {
       path: "/",
       component: Home,
-      name: "导航一",
+      name: "table",
       iconCls: "fa fa-table", //图标样式class
 
       children: [
@@ -42,7 +42,7 @@ export default new Router({
     {
       path: "/",
       component: Home,
-      name: "导航二",
+      name: "生命周期",
       iconCls: "fa fa-id-card-o",
       children: [
         //{ path: "/page4", component: Form, name: "页面4" },

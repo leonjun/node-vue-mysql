@@ -1,7 +1,7 @@
 <template>
  <el-row class="container">
    <!--顶部-->
-     <el-menu  class="el-menu-demo head" background-color="#20a0ff">
+     <el-menu  class="el-menu-demo head" background-color="#42b983">
   <el-col :span="5" >
 				<div :class="isCollapse?'tools2':'tools'" @click="collapse">
 					<i class="fa fa-align-justify"></i>
@@ -29,17 +29,24 @@
 
     
     <el-menu  :default-active="this.$route.path" :unique-opened="true"  router  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"  @select="handleselect" :collapse="isCollapse">
-        <template v-for="(item,index) in this.$router.options.routes" v-if="!item.hidden">
+        <template v-for="(item,index) in this.$router.options.routes" >
+          <template v-if="!item.hidden">
           <el-submenu  :index="index+''"  :key="index" v-if="!item.leaf">
             <template slot="title">
               <i :class="item.iconCls"></i>
               <span slot="title">{{item.name}}</span>
             </template>
-            <el-menu-item-group >   
-              <el-menu-item   v-for="(child,i) in item.children" :index="child.path" :key="i" v-if="!child.hidden">{{child.name}}</el-menu-item>
+            <el-menu-item-group >
+              
+              <el-menu-item   v-for="(child,i) in item.children" :index="child.path" :key="i" >
+                <span v-if="!child.hidden">{{child.name}}</span>  
+              </el-menu-item>
+              
             </el-menu-item-group>          
           </el-submenu>          
           <el-menu-item v-if="item.leaf&&item.children.length>0" :key="index" :index="item.children[0].path"><i :class="item.iconCls"></i><span slot="title">{{item.children[0].name}}</span></el-menu-item>
+          </template>
+        
         </template>
 
     </el-menu>
