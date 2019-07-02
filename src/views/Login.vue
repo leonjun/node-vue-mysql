@@ -21,6 +21,9 @@
       <el-form-item>
         <el-button class="sub-button" type="primary" @click="submit" :loading="loading">登陆</el-button>
       </el-form-item>
+      <el-form-item>
+        <router-link to="/register">注册</router-link>
+      </el-form-item>
   </el-form>
 </template>
 
@@ -65,29 +68,33 @@ export default {
       submit(){
           this.$refs.ruleForm2.validate((valid)=>{
             if(valid){
-                this.loading=true;
+                //this.loading=true;
                 this.codeTooltip = false;
                 let bool = this.verifyCode.validate(this.ruleForm2.verify);
                 if (!bool) {
                     this.loading=false;
                     return (this.codeTooltip = true);
                 }
-                var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.password };
+                //var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.password };
+                var loginParams={
+                  name:this.ruleForm2.account,
+                  password:this.ruleForm2.password
+                }
                 requestLogin(loginParams).then(data => {
-                
-              //NProgress.done();
-                let { msg, code, user } = data;
-                if (code !== 200) {
-                    this.$message({
-                    message: msg,
-                     type: 'error'
-                    });
-                    this.loading=false;
-                } else {
-                    this.loading=false;
-                    sessionStorage.setItem('user', JSON.stringify(user));
-                    this.$router.push({ path: '/table' });
-                    }
+                console.log(data)
+              // NProgress.done();
+              //   let { msg, code, user } = data;
+              //   if (code !== 200) {
+              //       this.$message({
+              //       message: msg,
+              //        type: 'error'
+              //       });
+              //       this.loading=false;
+              //   } else {
+              //       this.loading=false;
+              //       sessionStorage.setItem('user', JSON.stringify(user));
+              //       this.$router.push({ path: '/table' });
+              //       }
                 });
                 
             }else{

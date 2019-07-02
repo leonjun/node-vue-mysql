@@ -9,6 +9,9 @@ import Vuex from "@/views/vuex/components/vuex";
 import LifeCycle from "./views/table/LifeCycle";
 import Promise from "./views/table/Promise";
 
+import AddUser from "./views/AddUser";
+import Register from "./views/Register";
+
 Vue.use(Router);
 
 export default new Router({
@@ -26,6 +29,16 @@ export default new Router({
       name: "",
       hidden: true,
       redirect: { name: "login" }
+    },
+    {
+      path: "/adduser",
+      name: "adduser", 
+      component:AddUser
+    },
+    {
+      path: "/register",
+      name: "register", 
+      component:Register
     },
     {
       path: "/",

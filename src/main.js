@@ -5,8 +5,10 @@ import router from "./router";
 import Mock from './mock';
 import 'font-awesome/scss/font-awesome.scss';
 import store from '@/views/vuex/store';
-Mock.boot();
-Vue.config.productionTip = false
+import axios from 'axios'
+Vue.prototype.$axios = axios;
+//Mock.boot();
+//Vue.config.productionTip = false
 
 new Vue({
   router,
