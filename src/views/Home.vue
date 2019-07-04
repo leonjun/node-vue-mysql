@@ -130,11 +130,12 @@ export default {
     //console.log(this.$route.path);
     // console.log(this.$router.path);
     let session=sessionStorage.getItem("user");
+    
     if(session){
       session=JSON.parse(session);
-      
-      this.sysName=session.name||"";
-      this.sysImg=session.avatar||"";
+      console.log(session)
+      this.sysName=session.name
+      //this.sysImg=session.avatar||"";
       
     }else{
       this.$router.push({ path: '/login' });

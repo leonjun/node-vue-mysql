@@ -19,58 +19,185 @@ var jsonWrite=function(res,ret){
     }
 }
 
+            
+function formatDate(date) {
+    var date = new Date(date);
+    var YY = date.getFullYear() + '-';
+    var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+    var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+    return YY + MM + DD +" "+hh + mm + ss;
+}
+
 router.post('/addUser',(request,response)=>{
     var sql=$sql.user.add;//sql语句
     let params=request.body;
-    console.log(params)
-    if(params.name==""||params.password==""){
+    let dt= new Date().getTime()
+    params.add_dt = formatDate(dt);
+    if(!params.name||!params.password){
         response.status(500).send("账号或密码不能为空")
         return
     }
-    conn.query(sql,[params.name,params.password],(err,result)=>{
-        if(err){
-            if(err.sqlState==23000){
-                response.status(500).send("账号已存在");
-            }
-            
-            
-        }
-        if(result){
-            var ss={
-                statusText:"成功",
-                status:200
-            }        
-            jsonWrite(response,ss);           
-        }
-    })   
+    var sql2=$sql.user.query;
+    sql2+=` where name = '${params.name}'`;
+    conn.query(sql2,(err,result)=>{   
+                    if(err){          
+                       return;                
+                    }
+                    if(result!=""){
+                        response.json({"BK_STATUS":"01","msg":"用户已存在"})
+                        return; 
+                    }
+                    if(result ==""){
+                        conn.query(sql,[params.name,params.password,params.add_dt],(err,result)=>{
+                            if(err){
+                                
+                                response.status(500).send(err);
+                                                 
+                            }
+                            if(result){
+                                response.json({"BK_STATUS":"00","msg":"成功"})          
+                            }
+                        }) 
+                    }
+    })     
 })
-router.post('/queryUser',(request,response)=>{
+//登录
+router.post('/login',(request,response)=>{
     var sql=$sql.user.query;//sql语句
     let params=request.body;
     if(params.name!=""){
-        sql+=` where name = '${params.name}'`
-       
+        sql+=` where name = '${params.name}'`;
+        conn.query(sql,(err,result)=>{
+            if(err){
+                return    
+            }
+            if(result && result==""){
+                response.json({"BK_STATUS":"01","msg":"无此用户"})     
+                //jsonWrite(response,result);           
+            }
+            if(result && result!=""){
+                sql+=` and password = '${params.password}'`;
+                conn.query(sql,(err,result)=>{
+                    if(err){
+                        return
+                    }if(result && result==""){
+                        response.json({"BK_STATUS":"02","msg":"密码错误"})
+                        //jsonWrite(response,result); 
+                    }if(result && result!=""){
+                        
+                        response.json({"BK_STATUS":"00","msg":"成功",data:result})
+                        
+                        //jsonWrite(response,result);
+                    }
+                    
+                })
+            }
+        })     
+    }
+    
+   
+})
+// router.post('/queryList',(request,response)=>{
+//     var sql=$sql.user.query;//sql语句   
+//         conn.query(sql,(err,result)=>{
+            
+//             if(err){          
+//                return;                
+//             }
+//             if(result){
+//                 console.log(result)
+//                 response.json({"data":result})
+//                 //jsonWrite(response.result)
+//             }
+//         })
+    
+// })
+router.post('/userListPage',(request,response)=>{
+    let sql=$sql.user.query;
+    let params=request.body;
+    if(params.name!=""){
+        sql+= ` where name = '${params.name}'`;
     }
     conn.query(sql,(err,result)=>{
+            
         if(err){
-            return    
+            response.send(err)          
+           return;                
         }
-        if(result && result==""){
-            response.json({"BK_STATUS":"01","msg":"无此用户"})     
-            //jsonWrite(response,result);           
+        if(result){
+            let _Users=result;
+            //let params=request.body;
+            let {page, pagesize} = params
+            // let userLists = _Users.filter(user => {
+            //     if (name && user.name.indexOf(name) == -1) return false;
+            //     return true;
+            // });
+            let total = result.length;
+            result = result.filter((u, index) => index < pagesize * page && index >= pagesize * (page - 1));
+            response.json({"BK_STATUS":"00","msg":"成功","total":total,data:result})
         }
-        if(result && result!=""){
-            sql+=` and password = '${params.password}'`;
-            conn.query(sql,(err,result)=>{
-                if(err){
-                    return
-                }if(result){
-                    response.json({"ttt":"1111"})
-                    // jsonWrite(response,result); 
-                }
-                
-            })
-        }
-    })   
+    })
+})
+router.post('/update',(request,response)=>{
+    let sql =$sql.user.update;
+    let params=request.body;
+    let dt= new Date().getTime()
+    params.last_md_dt = formatDate(dt);
+    if(params.id!=""){
+        conn.query(sql,[params.name,params.password,params.email,params.phone,params.sex,params.address,params.last_md_dt,params.id],(err,result)=>{
+            if(err){
+                response.send(err)
+                return;
+            }
+            if(result){
+                response.json({"BK_STATUS":"00","msg":"成功"})
+            }
+        })
+
+    }else{
+        response.status(500).send('id为空')
+    }
+})
+router.post('/delete',(request,response)=>{
+    let sql =$sql.user.delete;
+    let params=request.body;
+    
+    if(params.id!=""){
+        conn.query(sql,[params.id],(err,result)=>{
+            if(err){
+                response.send(err)
+                return;
+            }
+            if(result){
+                response.json({"BK_STATUS":"00","msg":"成功"})
+            }
+        })
+
+    }else{
+        response.status(500).send('id为空')
+    }
+})
+//批量删除暂未实现
+router.post('/batchDelete',(request,response)=>{
+    let sql =$sql.user.batchDelete;
+    let params=request.body;
+    if(params!=""){
+        conn.query(sql,params,(err,result)=>{
+            if(err){
+                response.send(err)
+                return;
+            }
+            if(result){
+                response.json({"BK_STATUS":"00","msg":"成功"})
+            }
+        })
+        
+
+    }else{
+        response.status(500).send('name为空')
+    }
 })
 module.exports=router;

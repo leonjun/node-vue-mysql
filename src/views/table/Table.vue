@@ -9,11 +9,9 @@
         <el-form-item>
 					<el-button type="primary" @click="getUsers">查询</el-button>
 				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" @click="handleAdd">新增</el-button>
-				</el-form-item>
+			
         <el-form-item>
-					<el-button type="primary" @click="handleAddTest"  >新增(引外部页面)</el-button>
+					<el-button type="primary" @click="handleAddTest"  >新增</el-button>
            
 				</el-form-item>
         
@@ -30,15 +28,15 @@
     style="width: 100%"
     @selection-change="handleSelectionChange"
     v-loading="listLoading">
-    <el-table-column
+    <!-- <el-table-column
       type="selection"
       width="55"
       >
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column
       prop="name"
       label="姓名"
-      width="100"
+     
       sortable
       >
       
@@ -46,46 +44,71 @@
     <el-table-column
       prop="sex"
       label="性别"
-      width="120"
+      
       sortable
       :formatter="formatSex"
       >
     </el-table-column>
+    
     <el-table-column
-      prop="age"
-      label="年龄"
-      width="100"
+      prop="phone"
+      label="电话"
+     
       sortable
-      show-overflow-tooltip>
+      >
     </el-table-column>
+
     <el-table-column
-      prop="birth"
-      label="生日"
+      prop="email"
+      label="邮箱"
+     
       sortable
-      show-overflow-tooltip>
+      >
     </el-table-column>
+
+
+    
     <el-table-column
-      prop="addr"
+      prop="address"
       label="地址"
       sortable
       show-overflow-tooltip>
     </el-table-column>
+
+    <el-table-column
+      prop="add_dt"
+      label="注册时间"
+      sortable
+      width="170"
+      :formatter="row => formatDate(row, 'add_dt')"
+      show-overflow-tooltip>
+    </el-table-column>
+
+    <el-table-column
+      prop="last_md_dt"
+      label="上次修改时间"
+      sortable
+      width="170"
+      :formatter="row => formatDate(row, 'last_md_dt')"
+      show-overflow-tooltip>
+    </el-table-column>
+
     <el-table-column label="操作">
       <template slot-scope="scope">
+       
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)">编辑
+          @click="handleEditout(scope.$index, scope.row)">编辑
         </el-button>
+       
         <el-button
-          size="mini"
-          @click="handleEditout(scope.$index, scope.row)">编辑2
-        </el-button>
-
-        <el-button
+          v-show="showdel"
           size="mini"
           type="danger"
           @click="handleDelete(scope.$index, scope.row)">删除
         </el-button>
+        
+        
       </template>
     </el-table-column>
   </el-table>
@@ -93,7 +116,7 @@
 
       <!--分页-->
       <el-col class="pagelist">
-        <el-button type="danger" :disabled="multipleSelection.length===0" @click="batchDelete">批量删除</el-button>
+        <!-- <el-button type="danger" :disabled="multipleSelection.length===0" @click="batchDelete">批量删除</el-button> -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -106,62 +129,7 @@
     </el-col>
     <!--分页结束-->
     <!--编辑弹窗-->
-    <el-dialog title="编辑" v-show="editshow" :visible.sync="editshow" :close-on-click-modal="false" @close='editClose'>
-      <el-form :model="editForm" ref="editForm" class="edit-add" :rules="rule">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="editForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input-number v-model="editForm.age" controls-position="right" :min="0" :max="200"></el-input-number>
-        </el-form-item>
-        <el-form-item label="生日" prop="birth">
-          <el-date-picker v-model="editForm.birth" type="date"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址" prop="addr">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-				<el-button @click="editCancle('editForm')">取消</el-button>
-				<el-button type="primary" @click="editSubmit" :loading="loading">提交</el-button>
-			</div>
-    </el-dialog>
-    <!--编辑弹窗结束-->
-    <!--新增弹窗-->
-    <el-dialog title="新增" v-show="addshow" :visible.sync="addshow" >
-      <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrules">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input-number v-model="addForm.age" controls-position="right" :min="0" :max="200"></el-input-number>
-        </el-form-item>
-        <el-form-item label="生日" prop="birth">
-          <el-date-picker v-model="addForm.birth" type="date"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址" prop="addr">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-				<el-button @click="addshow = false">取消</el-button>
-				<el-button type="primary" @click="addSubmit" :loading="loading">提交</el-button>
-       
-			</div>
-    </el-dialog>
-    <!--编辑弹窗结束-->
+    
 
   </el-col>
   <addtest ref="addtest" v-if="addtestshow" @abd="getUsers"></addtest>
@@ -174,7 +142,7 @@ import util from "@/common/js/util";
 import addtest from "@/components/templete/AddUser";
 import {init} from "@/components/templete/AddUser";
 //import NProgress from 'nprogress'
-import { getUserListPage, removeUser, editUser, addUser,batchRemoveUser } from "@/api/api";
+import { getUserListPage,batchDelete,deleteUser,userListPage, updateUser, removeUser, editUser, addUser,batchRemoveUser } from "@/api/api";
 export default {
   components:{
     addtest
@@ -188,6 +156,7 @@ export default {
         pagesize: 10,
         name: ""
       },
+      showdel:false,
       multipleSelection:[],
       listLoading: false, //列表loading
       users: [], //用户列表数据
@@ -199,17 +168,17 @@ export default {
         id: "",
         name: "",
         sex: "",
-        addr: "",
-        age: "",
-        birth: ""
+        address: "",
+        phone: "",
+        email: ""
       },
       //存放新增数据
       addForm: {
         name: "",
         sex: "",
-        addr: "",
-        age: "",
-        birth: ""
+        address: "",
+        phone: "",
+        email: ""
       },
       //表单验证
       rule: {
@@ -252,18 +221,20 @@ export default {
     },
     //批量删除
     batchDelete(){
-      let ids= this.multipleSelection.map(item =>item.id).toString();
-       
-      let data={
-        ids:ids
-      }
       
+      let names= this.multipleSelection.map(item =>item.name).toString();
+       
+      let datas={
+        names:names
+      }
+      let data=datas.names.split(",")
+      console.log(data)
       this.$confirm("是否删除所选用户?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }) .then(() => {
-          batchRemoveUser(data).then(res => {
+          batchDelete(data).then(res => {
             this.$message({
               type: "success",
               message: "删除成功!"
@@ -298,99 +269,26 @@ export default {
         this.$refs.addtest.addForm=Object.assign({}, row);
       })
     },
-    //编辑按钮
-    handleEdit(index, row) {
-      this.editshow = true;
-      this.editForm = Object.assign({}, row);
-
-      //console.log(this.editForm);
-    },
-    //编辑提交
-    editSubmit() {
-      
-      
-      this.$refs.editForm.validate((valid) =>{
-        if(valid){
-            this.$confirm("确认提交?", "提示", {}).then(() => {
-            let data = Object.assign({}, this.editForm);
-            data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');
-            this.loading = true;
-            editUser(data).then(res => {
-              this.loading = false;
-
-              this.$message({
-                type: "success",
-                message: "修改成功!"
-              });
-              this.$refs["editForm"].resetFields();//重置
-              this.editshow = false;
-
-              this.getUsers();
-            });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消修改"
-            });
-          });
-
-        }else{
-          return false;
-        }
-      })
-      
-    },
-    //新增按钮
-    handleAdd() {
-      this.addshow = true;
-      this.addForm={
-        name: "",
-        sex: "",
-        addr: "",
-        age: "",
-        birth: ""
-      }
-    },
-    //新增提交
-    addSubmit() {
-      let data = Object.assign({}, this.addForm);
-      console.log(data);
-      this.$refs.addForm.validate((valid) => {
-        if (valid) {
-          this.$confirm("确认提交?", "提示", {}).then(() => {
-              let data = Object.assign({}, this.addForm);
-              data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');//日期转换格式
-              console.log(data);
-              this.loading = true;
-              addUser(data).then(res => {
-                this.loading = false;
-
-                this.$message({
-                  type: "success",
-                  message: "新增成功!"
-                });
-                
-                this.$refs["addForm"].resetFields();//重置
-               // console.log(this.addForm)
-                this.addshow = false;
-
-                this.getUsers();
-              });
-            })
-            .catch(() => {
-              this.$message({
-                type: "info",
-                message: "已取消新增"
-              });
-            });
-        } else {
-          return false;
-        }
-      });
-    },
+    
     //删除
     handleDelete(index, row) {
+      let session=sessionStorage.getItem("user");
+      session=JSON.parse(session);
+
+      if(session.name == row.name){
+        this.$message({
+            type: "error",
+            message: "不能删除本人!"
+        });
+        return
+      }
+      if(session.level>row.level){
+        this.$message({
+            type: "error",
+            message: "不能删除级别比你高的人!"
+        });
+        return
+      }
       let data = {
         id: row.id
       };
@@ -400,7 +298,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }) .then(() => {
-          removeUser(data).then(res => {
+          deleteUser(data).then(res => {
             this.$message({
               type: "success",
               message: "删除成功!"
@@ -424,10 +322,13 @@ export default {
         pagesize: this.pages.pagesize
       };
       this.listLoading = true;
-      getUserListPage(data).then(res => {
-        
-        this.users = res.data.users;
+      
+      userListPage(data).then(res => {
+        console.log(res)
+        this.users = res.data.data;
         this.pages.total = res.data.total;
+        this.listLoading = false;
+      }).catch(err=>{
         this.listLoading = false;
       });
     },
@@ -454,18 +355,57 @@ export default {
         
         this.$refs.addtest.init();
         this.$refs.addtest.isAdd=true;
-        this.$refs.addtest.addForm={
-           name: "",
-            sex: "",
-            addr: "",
-            age: "",
-            birth: ""
-        }
+        // this.$refs.addtest.addForm={
+        //    name: "",
+        //     sex: "",
+        //     address: "",
+        //     age: "",
+        //     //birth: ""
+        // }
       })
+    },
+    
+    //换算时间
+    formatDate(row, dt) {
+
+      let dat;
+      
+      
+      let _this=this;
+      if(dt === "add_dt" && row.add_dt ){
+        dat=row.add_dt;
+        var date = new Date(dat);
+        var YY = date.getFullYear() + '-';
+        var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+        var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return YY + MM + DD +" "+hh + mm + ss;
+      }
+      if(dt==="last_md_dt" &&row.last_md_dt){
+         dat=row.last_md_dt;
+         var date = new Date(dat);
+        var YY = date.getFullYear() + '-';
+        var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+        var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return YY + MM + DD +" "+hh + mm + ss;
+      } 
+      
     }
   },
   mounted() {
     this.getUsers();
+    let session=sessionStorage.getItem('user');
+    session=JSON.parse(session)
+    if(session.level>1){
+      this.showdel=false
+    }else{
+      this.showdel=true
+    }
   },
 };
 </script>
@@ -479,7 +419,7 @@ export default {
     padding: 10px;
     text-align: left;
     .el-pagination{
-      float: right;
+      float: left;
     }
   }
 }

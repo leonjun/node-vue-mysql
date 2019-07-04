@@ -6,20 +6,24 @@
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addForm.password"></el-input>
+        </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
+						<el-radio class="radio" label="1">男</el-radio>
+						<el-radio class="radio" label="0">女</el-radio>
 					</el-radio-group>
         </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input-number v-model="addForm.age" controls-position="right" :min="0" :max="200"></el-input-number>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="addForm.phone"></el-input>
         </el-form-item>
-        <el-form-item label="生日" prop="birth">
-          <el-date-picker v-model="addForm.birth" type="date"></el-date-picker>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="地址" prop="addr">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
+        
+        <el-form-item label="地址" prop="address">
+          <el-input type="textarea" v-model="addForm.address"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -33,10 +37,10 @@
 
 <script>
 import util from "@/common/js/util";
-import {editUser, addUser } from "@/api/api";
+import {updateUser, addUser } from "@/api/api";
 //import {getUsers} from "@/views/table/Table"
  export default {
-   props:["abdc"],
+   //props:["abdc"],
    data () {
      return {
       loading:false,
@@ -45,12 +49,9 @@ import {editUser, addUser } from "@/api/api";
       isAdd:true,
          //存放新增数据
       addForm: {
-        name: "",
-        sex: "",
-        addr: "",
-        age: "",
-        birth: ""
+        password:"",
       },
+      
       addrule: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       }
@@ -60,7 +61,8 @@ import {editUser, addUser } from "@/api/api";
        init(){
            this.showshow=true;
            this.$nextTick(()=>{
-              console.log("131231232")
+             console.log(this.addForm)
+              //console.log("131231232")
            });
        },
       submit() {
@@ -71,12 +73,22 @@ import {editUser, addUser } from "@/api/api";
         if (valid) {
           this.$confirm("确认提交?", "提示", {}).then(() => {
               let data = Object.assign({}, this.addForm);
-              data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');//日期转换格式
+              
+              data.password=this.addForm.password;
+              //data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');//日期转换格式
               
               this.loading = true;
               addUser(data).then(res => {
                 this.loading = false;
+                console.log(res)
+                if(res.data.BK_STATUS!="00"){
+                  this.$message({
+                  type: "error",
+                  message: res.data.msg
+                  });
 
+                  return ;
+                }
                 this.$message({
                   type: "success",
                   message: "新增成功!"
@@ -87,6 +99,8 @@ import {editUser, addUser } from "@/api/api";
                 this.showshow = false;
 
                 this.$emit('abd');
+              }).catch(err=>{
+                this.loading = false
               });
             })
             .catch(() => {
@@ -104,10 +118,13 @@ import {editUser, addUser } from "@/api/api";
         if(valid){
             this.$confirm("确认提交?", "提示", {}).then(() => {
             let data = Object.assign({}, this.addForm);
-            data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');
+
+            
+            
+            //data.birth = (!data.birth || data.birth == '') ? '' : util.formatDate.format(new Date(data.birth), 'yyyy-MM-dd');
             this.loading = true;
             
-            editUser(data).then(res => {
+            updateUser(data).then(res => {
               this.loading = false;
 
               this.$message({
@@ -135,6 +152,9 @@ import {editUser, addUser } from "@/api/api";
       }
       
     },
+   },
+   mounted(){
+     
    }
  }
 </script>

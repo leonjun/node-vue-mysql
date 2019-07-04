@@ -1,4 +1,6 @@
 <template>
+<div class="login-table">
+<div class="login">
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="login-box">
       <h3>登陆系统</h3>
       <el-form-item prop="account">
@@ -21,14 +23,15 @@
       <el-form-item>
         <el-button class="sub-button" type="primary" @click="submit" :loading="loading">登陆</el-button>
       </el-form-item>
-      <el-form-item>
-        <router-link to="/register">注册</router-link>
-      </el-form-item>
+      
   </el-form>
+  <button @click="que">11111111111</button>
+</div>
+</div>
 </template>
 
 <script>
-import {requestLogin} from '@/api/api'
+import {requestLogin,userListPage} from '@/api/api'
 import GVerify from "@/utils/gVerify.js";
 export default {
   name: 'login',
@@ -65,6 +68,18 @@ export default {
        this.verifyCode = new GVerify("v_container");
   },
   methods:{
+    que(){
+      var data={
+        page:1,
+        name:"",
+        pagesize:10
+      }
+      userListPage(data).then(res=>{
+        console.log(res)
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
       submit(){
           this.$refs.ruleForm2.validate((valid)=>{
             if(valid){
@@ -81,7 +96,16 @@ export default {
                   password:this.ruleForm2.password
                 }
                 requestLogin(loginParams).then(data => {
-                console.log(data)
+                  if(data.data.BK_STATUS=="00"){
+                      sessionStorage.setItem('user', JSON.stringify(data.data.data[0]));
+                      this.$router.push({ path: '/table' });
+                  }else{
+                    this.$message({
+                      message:data.data.msg,
+                      type: 'error'
+                    })
+                  }
+                  this.loading=false;
               // NProgress.done();
               //   let { msg, code, user } = data;
               //   if (code !== 200) {
@@ -111,16 +135,27 @@ export default {
 </script>
 
 <style>
+.login-table{
+  display: table;
+  width: 100%;
+  height: 100%;
+  background-color: #2c3142;
+}
+.login{
+  display: table-cell;
+  vertical-align: middle;
+}
     .login-box{
+      
         border-radius: 5px;
         -moz-border-radius: 5px;
         background-clip: padding-box;
-        margin: 180px auto;
+        margin: 0 auto;
         width: 350px;
         padding: 35px 35px 15px 35px;
         background: #fff;
         border: 1px solid #eaeaea;
-        box-shadow: 0 0 25px #cac6c6;
+        /* box-shadow: 0 0 25px #cac6c6; */
     }
     .sub-button{
         width: 100%;

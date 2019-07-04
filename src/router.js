@@ -33,11 +33,13 @@ export default new Router({
     {
       path: "/adduser",
       name: "adduser", 
+      hidden:true,
       component:AddUser
     },
     {
       path: "/register",
       name: "register", 
+      hidden:true,
       component:Register
     },
     {
