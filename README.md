@@ -1,29 +1,23 @@
 # vue-element
+## 小白学node
 
-## Project setup
+## 功能
+```
+简单的增删改查已实现（只有一张表）
+```
+
+### 运行
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
+
+然后切换至server文件夹
+node index.js
+```
+### 计划
+```
+1.上传功能
+2.批量删除
+3.弄角色权限菜单（听说最少要五张表，到时候表结构估计要改变）
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
