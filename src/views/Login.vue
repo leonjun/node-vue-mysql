@@ -23,16 +23,31 @@
       <el-form-item>
         <el-button class="sub-button" type="primary" @click="submit" :loading="loading">登陆</el-button>
       </el-form-item>
-      
+      <el-upload name="test" :on-remove="remove" :on-change="onChangeUpload" :limit="1" :before-upload="beforeUpload" :auto-upload="false" action="http://localhost:8080/api/user/img"  accept="image/*"  :on-success="success" :on-error="error()">
+        <el-button type="primary">上传</el-button>
+      </el-upload>
+      <el-button @click="tijiao">ok</el-button>
   </el-form>
-  <button @click="que">11111111111</button>
+
 </div>
+
 </div>
 </template>
 
 <script>
-import {requestLogin,userListPage} from '@/api/api'
+
+import {requestLogin,userListPage,upload} from '@/api/api';
 import GVerify from "@/utils/gVerify.js";
+// function upload(){
+//   var file=   document.getElementById("file").files[0];
+//   var formData= new FormData();
+//   formData.append('test',file);
+//   upload(formData).then(res=>{
+//         console.log(res)
+//       }).catch(err=>{
+//         console.log(err)
+//       })
+// }
 export default {
   name: 'login',
   components: {
@@ -40,7 +55,7 @@ export default {
   },
   data(){
       return{
-          
+          uploadData:"",
           verifyCode:null,
         codeTooltip:false,
         loading:false,
@@ -68,6 +83,44 @@ export default {
        this.verifyCode = new GVerify("v_container");
   },
   methods:{
+    success(file){
+      console.log(file)
+    },
+    error(err){
+      console.log(err)
+    },
+    beforeUpload(file){
+      var size=file.size/1024/1024;
+      if(size>1){
+        alert("err")
+        return false;
+      }
+    },
+    remove(){
+      this.uploadData="";
+    },
+    onChangeUpload(file){
+      this.uploadData=file.raw;
+      console.log(file.raw)
+    },
+    tijiao(){
+      if(this.uploadData!=""){
+        var formData= new FormData();
+        formData.append('test',this.uploadData);
+        upload(formData).then(res=>{
+              this.$message({
+                message:"上传成功"
+              })
+            }).catch(err=>{
+              console.log(err)
+        })
+      }
+      if(this.uploadData==""){
+        this.$message({
+            message:"请选择图片"
+        })
+      }
+    },
     que(){
       var data={
         page:1,
@@ -96,29 +149,21 @@ export default {
                   password:this.ruleForm2.password
                 }
                 requestLogin(loginParams).then(data => {
+                  console.log(data)
                   if(data.data.BK_STATUS=="00"){
                       sessionStorage.setItem('user', JSON.stringify(data.data.data[0]));
                       this.$router.push({ path: '/table' });
                   }else{
+                    
                     this.$message({
                       message:data.data.msg,
                       type: 'error'
                     })
                   }
                   this.loading=false;
-              // NProgress.done();
-              //   let { msg, code, user } = data;
-              //   if (code !== 200) {
-              //       this.$message({
-              //       message: msg,
-              //        type: 'error'
-              //       });
-              //       this.loading=false;
-              //   } else {
-              //       this.loading=false;
-              //       sessionStorage.setItem('user', JSON.stringify(user));
-              //       this.$router.push({ path: '/table' });
-              //       }
+              
+                }).catch(err=>{
+                  console.log(err)
                 });
                 
             }else{

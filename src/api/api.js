@@ -24,6 +24,9 @@ export const batchDelete = params => {
 export const addUser = params => {
     return axios.post('/api/user/addUser', params).then(res => res); 
 };
+export const upload = params => {
+    return axios.post('/api/user/img', params).then(res => res); 
+};
 
 export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };
 

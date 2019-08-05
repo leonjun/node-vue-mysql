@@ -3,7 +3,10 @@ var express=require('express')
 var router=express.Router();
 var mysql=require('mysql')
 var $sql=require('../sqlMap')
-
+var multer =require("multer")
+var upload=multer({dest:'uploads/'})
+var path=require('path');
+const fs=require('fs');
 
 var conn=mysql.createConnection(models.mysql);
 conn.connect();
@@ -30,7 +33,26 @@ function formatDate(date) {
     var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
     return YY + MM + DD +" "+hh + mm + ss;
 }
-
+router.post('/img',upload.single('test'),(req,res)=>{
+    console.log(req.file)
+    //res.send("11111")
+    var name=Date.now()+parseInt(Math.random()*999)+'.'+req.file.mimetype.split('/')[1];
+    fs.readFile(req.file.path,(err,data)=>{
+        if(err){
+            res.send("失败");
+            return;
+        }
+        fs.writeFile(path.join(__dirname,'../../static/img/'+name),data,(err)=>{
+            if(err){
+                res.send("失败了");
+                console.log(err);
+                return;
+            }
+            
+            res.send({msg:"success",data:'../../static/img/'+name})
+        })
+    })
+})
 router.post('/addUser',(request,response)=>{
     var sql=$sql.user.add;//sql语句
     let params=request.body;
