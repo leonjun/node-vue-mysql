@@ -23,10 +23,7 @@
       <el-form-item>
         <el-button class="sub-button" type="primary" @click="submit" :loading="loading">登陆</el-button>
       </el-form-item>
-      <el-upload name="test" :on-remove="remove" :on-change="onChangeUpload" :limit="1" :before-upload="beforeUpload" :auto-upload="false" action="http://localhost:8080/api/user/img"  accept="image/*"  :on-success="success" :on-error="error()">
-        <el-button type="primary">上传</el-button>
-      </el-upload>
-      <el-button @click="tijiao">ok</el-button>
+      
   </el-form>
 
 </div>
@@ -38,16 +35,7 @@
 
 import {requestLogin,userListPage,upload} from '@/api/api';
 import GVerify from "@/utils/gVerify.js";
-// function upload(){
-//   var file=   document.getElementById("file").files[0];
-//   var formData= new FormData();
-//   formData.append('test',file);
-//   upload(formData).then(res=>{
-//         console.log(res)
-//       }).catch(err=>{
-//         console.log(err)
-//       })
-// }
+
 export default {
   name: 'login',
   components: {
@@ -83,44 +71,7 @@ export default {
        this.verifyCode = new GVerify("v_container");
   },
   methods:{
-    success(file){
-      console.log(file)
-    },
-    error(err){
-      console.log(err)
-    },
-    beforeUpload(file){
-      var size=file.size/1024/1024;
-      if(size>1){
-        alert("err")
-        return false;
-      }
-    },
-    remove(){
-      this.uploadData="";
-    },
-    onChangeUpload(file){
-      this.uploadData=file.raw;
-      console.log(file.raw)
-    },
-    tijiao(){
-      if(this.uploadData!=""){
-        var formData= new FormData();
-        formData.append('test',this.uploadData);
-        upload(formData).then(res=>{
-              this.$message({
-                message:"上传成功"
-              })
-            }).catch(err=>{
-              console.log(err)
-        })
-      }
-      if(this.uploadData==""){
-        this.$message({
-            message:"请选择图片"
-        })
-      }
-    },
+    
     que(){
       var data={
         page:1,

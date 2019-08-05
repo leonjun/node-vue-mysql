@@ -21,7 +21,12 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="addForm.email"></el-input>
         </el-form-item>
-        
+
+        <el-upload prop="imgsrc" name="test" :on-remove="remove" :on-change="onChangeUpload" :limit="1" :before-upload="beforeUpload" :auto-upload="false" action="http://localhost:8080/api/user/img"  accept="image/*"  :on-success="success" :on-error="error()">
+          <el-button type="primary">选择图片</el-button>
+        </el-upload>
+        <el-button @click="tijiao">ok</el-button>
+
         <el-form-item label="地址" prop="address">
           <el-input type="textarea" v-model="addForm.address"></el-input>
         </el-form-item>
@@ -37,18 +42,20 @@
 
 <script>
 import util from "@/common/js/util";
-import {updateUser, addUser } from "@/api/api";
+import {updateUser, addUser ,upload} from "@/api/api";
 //import {getUsers} from "@/views/table/Table"
  export default {
    //props:["abdc"],
    data () {
      return {
+       
       loading:false,
       showshow:false,
       addshow:false,
       isAdd:true,
          //存放新增数据
       addForm: {
+        imgsrc:"",
         password:"",
       },
       
@@ -65,6 +72,51 @@ import {updateUser, addUser } from "@/api/api";
               //console.log("131231232")
            });
        },
+       success(file){
+      console.log(file)
+    },
+    error(err){
+      console.log(err)
+    },
+    beforeUpload(file){
+      var size=file.size/1024/1024;
+      if(size>1){
+        alert("err")
+        return false;
+      }
+    },
+    remove(){
+      this.uploadData="";
+    },
+    onChangeUpload(file){
+      this.addForm.imgsrc=file.raw;
+      console.log(file.raw)
+    },
+    tijiao(){
+      alert(this.addForm.imgsrc)
+      var imgsrc=this.addForm.imgsrc;
+      if(imgsrc){
+        var size=imgsrc.size/1024/1024;
+        if(size>1){
+          alert("图片尺寸最大1兆")
+          return false;
+        }
+        var formData= new FormData();
+        formData.append('test',imgsrc);
+        upload(formData).then(res=>{
+              this.$message({
+                message:"上传成功"
+              })
+            }).catch(err=>{
+              console.log(err)
+        })
+      }else{
+        this.$message({
+            message:"请选择图片"
+        })
+      }
+      
+    },
       submit() {
       let data = Object.assign({}, this.addForm);
      
@@ -114,6 +166,7 @@ import {updateUser, addUser } from "@/api/api";
         }
       });
       }else{
+        console.log( this.addForm)
         this.$refs.addForm.validate((valid) =>{
         if(valid){
             this.$confirm("确认提交?", "提示", {}).then(() => {

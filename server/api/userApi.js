@@ -33,8 +33,9 @@ function formatDate(date) {
     var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
     return YY + MM + DD +" "+hh + mm + ss;
 }
+var imgsrc;
 router.post('/img',upload.single('test'),(req,res)=>{
-    console.log(req.file)
+    
     //res.send("11111")
     var name=Date.now()+parseInt(Math.random()*999)+'.'+req.file.mimetype.split('/')[1];
     fs.readFile(req.file.path,(err,data)=>{
@@ -48,7 +49,8 @@ router.post('/img',upload.single('test'),(req,res)=>{
                 console.log(err);
                 return;
             }
-            
+            imgsrc=name;
+            console.log(imgsrc)
             res.send({msg:"success",data:'../../static/img/'+name})
         })
     })
@@ -169,7 +171,8 @@ router.post('/update',(request,response)=>{
     let dt= new Date().getTime()
     params.last_md_dt = formatDate(dt);
     if(params.id!=""){
-        conn.query(sql,[params.name,params.password,params.email,params.phone,params.sex,params.address,params.last_md_dt,params.id],(err,result)=>{
+        console.log(imgsrc)
+        conn.query(sql,[params.name,params.password,params.email,params.phone,params.sex,params.address,params.last_md_dt,params.id,imgsrc],(err,result)=>{
             if(err){
                 response.send(err)
                 return;
