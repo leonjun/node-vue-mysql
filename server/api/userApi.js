@@ -92,12 +92,14 @@ router.post('/addUser',(request,response)=>{
 router.post('/login',(request,response)=>{
     var sql=$sql.user.query;//sql语句
     let params=request.body;
+    console.log(params)
     if(params.name!=""){
-        sql+=` where name = '${params.name}'`;
+        sql+=` and a.name = '${params.name}'`;
         conn.query(sql,(err,result)=>{
             if(err){
-                return    
+                return response.status(500).send(err)   
             }
+            console.log(1)
             if(result && result==""){
                 response.json({"BK_STATUS":"01","msg":"无此用户"})     
                 //jsonWrite(response,result);           
@@ -143,7 +145,7 @@ router.post('/userListPage',(request,response)=>{
     let sql=$sql.user.query;
     let params=request.body;
     if(params.name!=""){
-        sql+= ` where name = '${params.name}'`;
+        sql+= ` and a.name = '${params.name}'`;
     }
     
     conn.query(sql,(err,result)=>{
