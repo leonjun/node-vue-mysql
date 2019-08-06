@@ -99,6 +99,7 @@ export default {
                   name:this.ruleForm2.account,
                   password:this.ruleForm2.password
                 }
+               
                 requestLogin(loginParams).then(data => {
                   console.log(data)
                   if(data.data.BK_STATUS=="00"){

@@ -7,7 +7,7 @@
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="addForm.password"></el-input>
+          <el-input type="password" v-model="addForm.password"></el-input>
         </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="addForm.sex">
@@ -15,17 +15,29 @@
 						<el-radio class="radio" label="0">女</el-radio>
 					</el-radio-group>
         </el-form-item>
+
+        <el-form-item label="角色">
+          <el-radio-group v-model="addForm.level">
+						<el-radio class="radio" label="2">管理员</el-radio>
+						<el-radio class="radio" label="3">用户</el-radio>
+					</el-radio-group>
+        </el-form-item>
+
         <el-form-item label="电话" prop="phone">
           <el-input v-model="addForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="addForm.email"></el-input>
         </el-form-item>
+        <el-form-item label="头像" prop="imgsrc">
+          <el-upload name="test" :on-remove="remove" :on-change="onChangeUpload" :limit="1" :before-upload="beforeUpload" :auto-upload="false" action="http://localhost:8080/api/user/img"  accept="image/*"  :on-success="success">
+            <el-button type="primary">选择图片</el-button>
+          </el-upload>
+          <el-button @click="tijiao">ok</el-button>
 
-        <el-upload prop="imgsrc" name="test" :on-remove="remove" :on-change="onChangeUpload" :limit="1" :before-upload="beforeUpload" :auto-upload="false" action="http://localhost:8080/api/user/img"  accept="image/*"  :on-success="success" :on-error="error()">
-          <el-button type="primary">选择图片</el-button>
-        </el-upload>
-        <el-button @click="tijiao">ok</el-button>
+        </el-form-item>
+
+        
 
         <el-form-item label="地址" prop="address">
           <el-input type="textarea" v-model="addForm.address"></el-input>
@@ -68,55 +80,54 @@ import {updateUser, addUser ,upload} from "@/api/api";
        init(){
            this.showshow=true;
            this.$nextTick(()=>{
-             console.log(this.addForm)
+             ///console.log(this.addForm)
               //console.log("131231232")
            });
        },
-       success(file){
-      console.log(file)
-    },
-    error(err){
-      console.log(err)
-    },
-    beforeUpload(file){
-      var size=file.size/1024/1024;
-      if(size>1){
-        alert("err")
-        return false;
-      }
-    },
-    remove(){
-      this.uploadData="";
-    },
-    onChangeUpload(file){
-      this.addForm.imgsrc=file.raw;
-      console.log(file.raw)
-    },
-    tijiao(){
-      alert(this.addForm.imgsrc)
-      var imgsrc=this.addForm.imgsrc;
-      if(imgsrc){
-        var size=imgsrc.size/1024/1024;
+      success(file){
+      
+      },
+      
+      beforeUpload(file){
+        var size=file.size/1024/1024;
         if(size>1){
-          alert("图片尺寸最大1兆")
+          
           return false;
         }
-        var formData= new FormData();
-        formData.append('test',imgsrc);
-        upload(formData).then(res=>{
-              this.$message({
-                message:"上传成功"
-              })
-            }).catch(err=>{
-              console.log(err)
-        })
-      }else{
-        this.$message({
-            message:"请选择图片"
-        })
-      }
+      },
+      remove(){
       
-    },
+        this.addForm.imgsrc="";
+      },
+      onChangeUpload(file){
+        this.addForm.imgsrc=file.raw;
+      
+      },
+      tijiao(){
+        
+        var imgsrc=this.addForm.imgsrc;
+        if(imgsrc){
+          var size=imgsrc.size/1024/1024;
+          if(size>1){
+            alert("图片尺寸最大1兆")
+            return false;
+          }
+          var formData= new FormData();
+          formData.append('test',imgsrc);
+          upload(formData).then(res=>{
+                this.$message({
+                  message:"上传成功"
+                })
+              }).catch(err=>{
+                console.log(err)
+          })
+        }else{
+          this.$message({
+              message:"请选择图片"
+          })
+        }
+        
+      },
       submit() {
       let data = Object.assign({}, this.addForm);
      
@@ -132,7 +143,7 @@ import {updateUser, addUser ,upload} from "@/api/api";
               this.loading = true;
               addUser(data).then(res => {
                 this.loading = false;
-                console.log(res)
+               
                 if(res.data.BK_STATUS!="00"){
                   this.$message({
                   type: "error",
@@ -149,7 +160,7 @@ import {updateUser, addUser ,upload} from "@/api/api";
                 this.$refs["addForm"].resetFields();//重置
                // console.log(this.addForm)
                 this.showshow = false;
-
+                this.remove();
                 this.$emit('abd');
               }).catch(err=>{
                 this.loading = false
@@ -166,7 +177,7 @@ import {updateUser, addUser ,upload} from "@/api/api";
         }
       });
       }else{
-        console.log( this.addForm)
+        
         this.$refs.addForm.validate((valid) =>{
         if(valid){
             this.$confirm("确认提交?", "提示", {}).then(() => {
@@ -186,7 +197,7 @@ import {updateUser, addUser ,upload} from "@/api/api";
               });
               this.$refs["addForm"].resetFields();//重置
               this.showshow = false;
-
+              this.remove();
               this.$emit('abd');
             });
           })

@@ -133,9 +133,10 @@ export default {
     
     if(session){
       session=JSON.parse(session);
-      console.log(session)
-      this.sysName=session.name
-      //this.sysImg=session.avatar||"";
+      
+      this.sysName=session.name;
+      
+      this.sysImg="http://127.0.0.1:8080"+session.imgsrc||"";
       
     }else{
       this.$router.push({ path: '/login' });

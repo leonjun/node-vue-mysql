@@ -49,7 +49,7 @@ router.post('/img',upload.single('test'),(req,res)=>{
                 console.log(err);
                 return;
             }
-            imgsrc=name;
+            imgsrc="/img/"+name;
             console.log(imgsrc)
             res.send({msg:"success",data:'../../static/img/'+name})
         })
@@ -75,7 +75,7 @@ router.post('/addUser',(request,response)=>{
                         return; 
                     }
                     if(result ==""){
-                        conn.query(sql,[params.name,params.password,params.add_dt],(err,result)=>{
+                        conn.query(sql,[params.name,params.password,params.add_dt,params.level],(err,result)=>{
                             if(err){
                                 
                                 response.status(500).send(err);
@@ -145,6 +145,7 @@ router.post('/userListPage',(request,response)=>{
     if(params.name!=""){
         sql+= ` where name = '${params.name}'`;
     }
+    
     conn.query(sql,(err,result)=>{
             
         if(err){
@@ -172,7 +173,7 @@ router.post('/update',(request,response)=>{
     params.last_md_dt = formatDate(dt);
     if(params.id!=""){
         console.log(imgsrc)
-        conn.query(sql,[params.name,params.password,params.email,params.phone,params.sex,params.address,params.last_md_dt,params.id,imgsrc],(err,result)=>{
+        conn.query(sql,[params.name,params.password,params.email,params.phone,params.sex,params.address,params.last_md_dt,imgsrc,params.level,params.id],(err,result)=>{
             if(err){
                 response.send(err)
                 return;
@@ -205,24 +206,33 @@ router.post('/delete',(request,response)=>{
         response.status(500).send('id为空')
     }
 })
-//批量删除暂未实现
+//批量删除
 router.post('/batchDelete',(request,response)=>{
     let sql =$sql.user.batchDelete;
-    let params=request.body;
-    if(params!=""){
-        conn.query(sql,params,(err,result)=>{
-            if(err){
-                response.send(err)
-                return;
-            }
-            if(result){
-                response.json({"BK_STATUS":"00","msg":"成功"})
-            }
-        })
+    let params=request.body.ids;
+    console.log(params.length)
+    if(params.length>0){
+        var flag=true;
+        for(let i=0;i<params.length;i++){
+            conn.query(sql,params[i],(err,result)=>{
+                if(err){
+                    flag=false;
+                    return;
+                }
+                // if(result){
+                //     response.json({"BK_STATUS":"00","msg":"成功"})
+                // }
+            })
+        }
+        if(!flag){
+            response.json({"BK_STATUS":"01","msg":"失败"});
+            return;
+        }
+        response.json({"BK_STATUS":"00","msg":"成功"})
         
 
     }else{
-        response.status(500).send('name为空')
+        response.status(500).send('id为空')
     }
 })
 module.exports=router;

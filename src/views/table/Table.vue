@@ -28,11 +28,11 @@
     style="width: 100%"
     @selection-change="handleSelectionChange"
     v-loading="listLoading">
-    <!-- <el-table-column
+    <el-table-column
       type="selection"
       width="55"
       >
-    </el-table-column> -->
+    </el-table-column>
     <el-table-column
       prop="name"
       label="姓名"
@@ -76,10 +76,17 @@
     </el-table-column>
 
     <el-table-column
+      prop="role"
+      label="角色信息"
+      sortable
+      show-overflow-tooltip>
+    </el-table-column>
+
+    <el-table-column
       prop="add_dt"
       label="注册时间"
       sortable
-      width="170"
+      
       :formatter="row => formatDate(row, 'add_dt')"
       show-overflow-tooltip>
     </el-table-column>
@@ -88,12 +95,12 @@
       prop="last_md_dt"
       label="上次修改时间"
       sortable
-      width="170"
+      
       :formatter="row => formatDate(row, 'last_md_dt')"
       show-overflow-tooltip>
     </el-table-column>
 
-    <el-table-column label="操作">
+    <el-table-column label="操作" width="170">
       <template slot-scope="scope">
        
         <el-button
@@ -116,7 +123,7 @@
 
       <!--分页-->
       <el-col class="pagelist">
-        <!-- <el-button type="danger" :disabled="multipleSelection.length===0" @click="batchDelete">批量删除</el-button> -->
+        <el-button type="danger" :disabled="multipleSelection.length===0" @click="batchDelete">批量删除</el-button>
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -216,25 +223,30 @@ export default {
     //选中某行
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log(val);
+      
       //this.sels = sels;
     },
     //批量删除
     batchDelete(){
       
-      let names= this.multipleSelection.map(item =>item.name).toString();
-       
+      
+
+      let session=sessionStorage.getItem("user");
+      session=JSON.parse(session);
+      
+      let id= this.multipleSelection.map(item =>item.id);
+      let ids=id.filter(item => item!=session.id)
       let datas={
-        names:names
+        ids:ids
       }
-      let data=datas.names.split(",")
-      console.log(data)
+     // let data=datas.names.split(",")
+     
       this.$confirm("是否删除所选用户?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }) .then(() => {
-          batchDelete(data).then(res => {
+          batchDelete(datas).then(res => {
             this.$message({
               type: "success",
               message: "删除成功!"
@@ -292,7 +304,7 @@ export default {
       let data = {
         id: row.id
       };
-      console.log(row);
+      
       this.$confirm("是否删除该用户?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -324,8 +336,14 @@ export default {
       this.listLoading = true;
       
       userListPage(data).then(res => {
-        console.log(res)
+        // console.log(1)
+        // let session=sessionStorage.getItem("user");
+        // session=JSON.parse(session);
         this.users = res.data.data;
+        // this.users=this.users.filter(item=>{
+        //   return item.id!=session.id;
+        // })
+       
         this.pages.total = res.data.total;
         this.listLoading = false;
       }).catch(err=>{
@@ -355,13 +373,13 @@ export default {
         
         this.$refs.addtest.init();
         this.$refs.addtest.isAdd=true;
-        // this.$refs.addtest.addForm={
-        //    name: "",
-        //     sex: "",
-        //     address: "",
-        //     age: "",
-        //     //birth: ""
-        // }
+        this.$refs.addtest.addForm={
+           name: "",
+            sex: "",
+            address: "",
+            age: "",
+            //birth: ""
+        }
       })
     },
     
