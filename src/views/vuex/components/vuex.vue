@@ -70,7 +70,7 @@
        getTodoLists:function(){
           
            let select= this.$store.state.todo.selects;
-           console.log(select)
+           //console.log(select)
            if(select=="1"){
                return this.$store.state.todo.todoInfos;
            }else if(select =="2"){

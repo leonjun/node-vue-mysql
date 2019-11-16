@@ -200,13 +200,13 @@ export default {
     
     //切换每页显示条数
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      //console.log(`每页 ${val} 条`);
       this.pages.pagesize = val;
       this.getUsers();
     },
     //翻页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      //console.log(`当前页: ${val}`);
       this.pages.page = val;
       this.getUsers();
     },
@@ -272,12 +272,13 @@ export default {
     },
     //编辑按钮（外部页面）
     handleEditout(index, row){
+      //console.log(row)
       this.addtestshow=true;
       this.$nextTick(()=>{
         
         this.$refs.addtest.init();
         this.$refs.addtest.isAdd=false;
-
+        this.$refs.addtest.imageUrl=row.imgsrc;
         this.$refs.addtest.addForm=Object.assign({}, row);
       })
     },
@@ -373,11 +374,15 @@ export default {
         
         this.$refs.addtest.init();
         this.$refs.addtest.isAdd=true;
+       
+       
+        this.$refs.addtest.imageUrl="";
         this.$refs.addtest.addForm={
-           name: "",
+            name: "",
             sex: "",
             address: "",
-            age: "",
+            imgsrc:""
+            //age: "",
             //birth: ""
         }
       })

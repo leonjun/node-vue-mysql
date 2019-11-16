@@ -34,24 +34,28 @@ function formatDate(date) {
     return YY + MM + DD +" "+hh + mm + ss;
 }
 var imgsrc;
-router.post('/img',upload.single('test'),(req,res)=>{
+router.post('/img',upload.single('file'),(req,res)=>{
     
     //res.send("11111")
+    
+    
     var name=Date.now()+parseInt(Math.random()*999)+'.'+req.file.mimetype.split('/')[1];
     fs.readFile(req.file.path,(err,data)=>{
         if(err){
             res.send("失败");
             return;
         }
-        fs.writeFile(path.join(__dirname,'../../static/img/'+name),data,(err)=>{
+        fs.writeFile(path.join(__dirname,'../static/img/'+name),data,(err)=>{
             if(err){
                 res.send("失败了");
-                console.log(err);
+                
                 return;
+            }else{
+                imgsrc="/img/"+name;
+               
+                res.send({msg:"success",data:'/img/'+name})
             }
-            imgsrc="/img/"+name;
-            console.log(imgsrc)
-            res.send({msg:"success",data:'../../static/img/'+name})
+            
         })
     })
 })
@@ -65,9 +69,12 @@ router.post('/addUser',(request,response)=>{
         return
     }
     var sql2=$sql.user.query;
-    sql2+=` where name = '${params.name}'`;
+    sql2+=` and a.name = '${params.name}'`;
+    
     conn.query(sql2,(err,result)=>{   
-                    if(err){          
+                    if(err){  
+                         response.status(500).send(err);
+                               
                        return;                
                     }
                     if(result!=""){
@@ -75,7 +82,11 @@ router.post('/addUser',(request,response)=>{
                         return; 
                     }
                     if(result ==""){
-                        conn.query(sql,[params.name,params.password,params.add_dt,params.level],(err,result)=>{
+                        
+                        if(!params.level){
+                            params.level=3
+                        }
+                        conn.query(sql,[params.name,params.password,params.add_dt,params.level,params.sex,params.phone,params.email,imgsrc,params.address],(err,result)=>{
                             if(err){
                                 
                                 response.status(500).send(err);
@@ -92,14 +103,14 @@ router.post('/addUser',(request,response)=>{
 router.post('/login',(request,response)=>{
     var sql=$sql.user.query;//sql语句
     let params=request.body;
-    console.log(params)
+    
     if(params.name!=""){
         sql+=` and a.name = '${params.name}'`;
         conn.query(sql,(err,result)=>{
             if(err){
                 return response.status(500).send(err)   
             }
-            console.log(1)
+           
             if(result && result==""){
                 response.json({"BK_STATUS":"01","msg":"无此用户"})     
                 //jsonWrite(response,result);           
@@ -174,8 +185,8 @@ router.post('/update',(request,response)=>{
     let dt= new Date().getTime()
     params.last_md_dt = formatDate(dt);
     if(params.id!=""){
-        console.log(imgsrc)
-        conn.query(sql,[params.name,params.password,params.email,params.phone,params.sex,params.address,params.last_md_dt,imgsrc,params.level,params.id],(err,result)=>{
+        
+        conn.query(sql,[params.name,params.password,params.email,params.phone,params.sex,params.address,params.last_md_dt,params.imgsrc,params.level,params.id],(err,result)=>{
             if(err){
                 response.send(err)
                 return;
@@ -212,7 +223,7 @@ router.post('/delete',(request,response)=>{
 router.post('/batchDelete',(request,response)=>{
     let sql =$sql.user.batchDelete;
     let params=request.body.ids;
-    console.log(params.length)
+    //console.log(params.length)
     if(params.length>0){
         var flag=true;
         for(let i=0;i<params.length;i++){

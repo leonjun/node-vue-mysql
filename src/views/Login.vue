@@ -79,9 +79,9 @@ export default {
         pagesize:10
       }
       userListPage(data).then(res=>{
-        console.log(res)
+        //console.log(res)
       }).catch(err=>{
-        console.log(err)
+        //console.log(err)
       })
     },
       submit(){
@@ -101,7 +101,7 @@ export default {
                 }
                
                 requestLogin(loginParams).then(data => {
-                  console.log(data)
+                  //console.log(data)
                   if(data.data.BK_STATUS=="00"){
                       sessionStorage.setItem('user', JSON.stringify(data.data.data[0]));
                       this.$router.push({ path: '/table' });

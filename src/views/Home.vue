@@ -10,7 +10,7 @@
   
   <el-col :span="4" class="user-info">
 				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner">{{sysName}}<img class="user-photo" :src="sysImg"/></span>
+					<span class="el-dropdown-link userinfo-inner">{{sysName}}<img class="user-photo" :src="img"/></span>
 					<el-dropdown-menu slot="dropdown">
 						<el-dropdown-item>我的消息</el-dropdown-item>
 						<el-dropdown-item>设置</el-dropdown-item>
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import {mapActions,mapGetters} from 'vuex';
 export default {
   data() {
     return {
@@ -94,6 +95,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['changeImg']),
     handleOpen(key, keyPath) {
       //console.log(key, keyPath);
     },
@@ -124,6 +126,28 @@ export default {
         });
       
 
+    },
+    
+  },
+  computed:{
+    img(){
+      let session=sessionStorage.getItem("user");
+    
+      if(session){
+      session=JSON.parse(session);
+      
+      this.sysName=session.name;
+      var srcs=this.$store.getters.getImgsrc;
+      
+      if(srcs=="" || srcs==null){
+        srcs="http://127.0.0.1:8080"+session.imgsrc||""
+        this.sysImg=srcs;
+        return;
+      }
+      
+      this.sysImg="http://127.0.0.1:8080"+srcs;
+      return this.sysImg
+    }
     }
   },
   mounted() {
@@ -135,13 +159,22 @@ export default {
       session=JSON.parse(session);
       
       this.sysName=session.name;
+      var srcs=this.$store.getters.getImgsrc;
+     
+      if(srcs=="" || srcs==null){
+        srcs="http://127.0.0.1:8080"+session.imgsrc||""
+        this.sysImg=srcs;
+        return;
+      }
       
-      this.sysImg="http://127.0.0.1:8080"+session.imgsrc||"";
+      this.sysImg="http://127.0.0.1:8080"+srcs;
+     
       
     }else{
       this.$router.push({ path: '/login' });
     }
-    
+   // console.log(this.changeImg())
+   
     
   }
 };

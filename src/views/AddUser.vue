@@ -35,13 +35,13 @@
                         name:_this.user.name,
                         password:_this.user.password
                     }).then((res)=>{
-                        console.log(res)
+                        //console.log(res)
                     }).catch((err)=>{
-                        console.log(err)
+                        //console.log(err)
                     })
                }
            }).catch((err)=>{
-               console.log(err)
+               //console.log(err)
            })
 
           

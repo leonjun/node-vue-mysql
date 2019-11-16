@@ -9,4 +9,10 @@ export default {
     doneTodo({commit},id){
         commit(type.DONETODO,id);
     },
+    changeImg({commit},imgsrc){
+        commit(type.IMGSRC,imgsrc);
+    },
+    setImg({commit},imgsrc){
+        commit(type.IMGSRC,imgsrc);
+    }
 }

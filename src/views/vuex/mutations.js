@@ -17,5 +17,9 @@ export default {
                 item.isDone=true;
             }
         })
+    },
+    [type.IMGSRC](state,imgsrc){
+        state.imgsrc=imgsrc;
+        
     }
 }

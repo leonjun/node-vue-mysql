@@ -9,9 +9,9 @@ const cors=require('cors');
 app.use(cors())
 app.use(bodyParse.urlencoded({extended:false}))
 app.use(bodyParse.json())
-app.use(express.static(path.join(__dirname,"../static")))
+app.use(express.static(path.join(__dirname,"./static")))
 
 app.use('/api/user',userApi)
 
 app.listen(3000)
-console.log(123)
+//console.log(123)

@@ -36,7 +36,7 @@ export default {
       };
       this.listLoading = true;
       getUserList(data).then(res => {
-        console.log(res);
+        //console.log(res);
         this.users = res.data.users;
         this.total = res.data.total;
         this.listLoading = false;
@@ -45,9 +45,9 @@ export default {
     usersChart() {
                 this.chartColumn = echarts.init(document.getElementById('userInfo'));
                 let names = this.users.map(item => item.name);
-                console.log("-------");
-                 console.log(this.users);
-                console.log(names);
+                //console.log("-------");
+                 //console.log(this.users);
+                //console.log(names);
                 let ages =this.users.map(item => item.age);
                 this.chartColumn.setOption({
 

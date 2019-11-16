@@ -3,7 +3,8 @@ import mutations from "./mutations";
 export default {
     state:{
         todoInfos:[],
-        selects:"1"
+        selects:"1",
+        imgsrc:""
     },
     actions:actions,
     mutations:mutations,
@@ -23,6 +24,11 @@ export default {
                 }
             }))
             return list;
+        },
+        getImgsrc:function(state){
+            //console.log(12123123123)
+            //console.log(state)
+            return state.imgsrc;
         }
     }
 }

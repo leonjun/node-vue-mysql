@@ -1,13 +1,13 @@
 <template>
  
      <!--新增弹窗-->
-    <el-dialog :title="isAdd?'新增':'编辑'"  :visible.sync="showshow" >
+    <el-dialog :title="isAdd?'新增':'编辑'"  :visible.sync="showshow" @close="close">
       <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrule">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="addForm.password"></el-input>
+        <el-form-item label="密码" prop="password" >
+          <el-input type="password" v-model="addForm.password" show-password></el-input>
         </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="addForm.sex">
@@ -16,7 +16,7 @@
 					</el-radio-group>
         </el-form-item>
 
-        <el-form-item label="角色">
+        <el-form-item label="角色" v-show="addForm.level!=1">
           <el-radio-group v-model="addForm.level">
 						<el-radio class="radio" label="2">管理员</el-radio>
 						<el-radio class="radio" label="3">用户</el-radio>
@@ -30,11 +30,24 @@
           <el-input v-model="addForm.email"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="imgsrc">
-          <el-upload name="test" :on-remove="remove" :on-change="onChangeUpload" :limit="1" :before-upload="beforeUpload" :auto-upload="false" action="http://localhost:8080/api/user/img"  accept="image/*"  :on-success="success">
-            <el-button type="primary">选择图片</el-button>
+         
+          <el-upload
+            name="file"
+            class="avatar-uploader"
+            action="http://localhost:8080/api/user/img"
+            accept="image/*"
+            :show-file-list="false"
+            :on-remove="remove"
+            :on-error="error"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeUpload"
+            :on-change="onChangeUpload"
+            :data="uploadData">
+            
+            <img v-if="imageUrl " :src="imageUrl" class="avatar">
+           
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-button @click="tijiao">ok</el-button>
-
         </el-form-item>
 
         
@@ -44,7 +57,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-				<el-button @click="showshow = false">取消</el-button>
+				<el-button @click="cancle">取消</el-button>
 				<el-button type="primary"  @click="submit" :loading="loading">提交</el-button>
 			</div>
     </el-dialog>
@@ -53,17 +66,47 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex';
 import util from "@/common/js/util";
 import {updateUser, addUser ,upload} from "@/api/api";
 //import {getUsers} from "@/views/table/Table"
  export default {
    //props:["abdc"],
    data () {
-     return {
+     var validatePass = (rule, value, callback) => {
        
+        if (value == "" || value==undefined) {
+          callback(new Error('请输入密码'));
+          return;
+        } 
+        else {
+          
+          if(value.length<6){
+             callback(new Error('密码长度最少6位'));
+          }
+          // if (this.ruleForm.checkPass !== '') {
+          //   this.$refs.ruleForm.validateField('checkPass');
+          // }
+         
+          callback();
+        }
+      };
+      var validatePhone=(rule,value,callback)=>{
+        var flag=/^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/.test(value);
+        
+        if(!flag){
+          callback(new Error('请输入正确格式的手机号'))
+        }else{
+          callback()
+        }
+      }
+     return {
+       uploadData:{},
+       imageUrl:"",
       loading:false,
       showshow:false,
       addshow:false,
+     // imgsrc:"",
       isAdd:true,
          //存放新增数据
       addForm: {
@@ -72,63 +115,67 @@ import {updateUser, addUser ,upload} from "@/api/api";
       },
       
       addrule: {
-        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+        name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        password:[{required: true, validator: validatePass, trigger:['blur', 'change']  }],
+        email:[ { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
+        phone:[ {required: true,validator:validatePhone, trigger: ['blur', 'change'] }],
       }
      }
    },
    methods:{
+     close:function(){
+       
+       this.$refs["addForm"].resetFields();
+       this.imageUrl="";
+     },
+     cancle:function(){
+       this.showshow=false;
+       this.$refs["addForm"].resetFields();
+       this.imageUrl="";
+     },
+     handleAvatarSuccess(res, file) {
+      this.addForm.imgsrc=file.response.data;
+      this.imageUrl = URL.createObjectURL(file.raw);
+       this.$message({
+                  type: "success",
+                  message: "上传成功!"
+      }); 
+      },
+      error:function(){
+        this.$message.error('上传失败');
+      },
+      
+     ...mapActions(['changeImg']),
        init(){
            this.showshow=true;
            this.$nextTick(()=>{
-             ///console.log(this.addForm)
-              //console.log("131231232")
+             
            });
        },
-      success(file){
       
-      },
       
       beforeUpload(file){
-        var size=file.size/1024/1024;
-        if(size>1){
-          
-          return false;
+       
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+       
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
         }
+        
+        return isLt2M;
       },
       remove(){
       
         this.addForm.imgsrc="";
       },
       onChangeUpload(file){
-        this.addForm.imgsrc=file.raw;
+        
+      },
       
-      },
-      tijiao(){
-        
-        var imgsrc=this.addForm.imgsrc;
-        if(imgsrc){
-          var size=imgsrc.size/1024/1024;
-          if(size>1){
-            alert("图片尺寸最大1兆")
-            return false;
-          }
-          var formData= new FormData();
-          formData.append('test',imgsrc);
-          upload(formData).then(res=>{
-                this.$message({
-                  message:"上传成功"
-                })
-              }).catch(err=>{
-                console.log(err)
-          })
-        }else{
-          this.$message({
-              message:"请选择图片"
-          })
-        }
-        
-      },
+      
       submit() {
+      
       let data = Object.assign({}, this.addForm);
      
       if(this.isAdd){
@@ -156,8 +203,9 @@ import {updateUser, addUser ,upload} from "@/api/api";
                   type: "success",
                   message: "新增成功!"
                 });
-                
+                this.changeImg(this.addForm.imgsrc);
                 this.$refs["addForm"].resetFields();//重置
+                this.imageUrl="";
                // console.log(this.addForm)
                 this.showshow = false;
                 this.remove();
@@ -195,7 +243,11 @@ import {updateUser, addUser ,upload} from "@/api/api";
                 type: "success",
                 message: "修改成功!"
               });
+              
+              this.changeImg(this.addForm.imgsrc);
+              this.imageUrl="";
               this.$refs["addForm"].resetFields();//重置
+               //console.log(this.addForm)
               this.showshow = false;
               this.remove();
               this.$emit('abd');
@@ -224,6 +276,30 @@ import {updateUser, addUser ,upload} from "@/api/api";
 </script>
 
 <style>
-
- 
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+ .is-success .el-input__inner{
+   border-color:green
+ }
 </style>
