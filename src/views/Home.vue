@@ -131,6 +131,8 @@ export default {
   },
   computed:{
     img(){
+      console.log(123123)
+      debugger
       let session=sessionStorage.getItem("user");
     
       if(session){
@@ -142,15 +144,18 @@ export default {
       if(srcs=="" || srcs==null){
         srcs="http://127.0.0.1:8080"+session.imgsrc||""
         this.sysImg=srcs;
-        return;
+       
+      }else{
+        this.sysImg="http://127.0.0.1:8080"+srcs;
       }
       
-      this.sysImg="http://127.0.0.1:8080"+srcs;
+      
       return this.sysImg
     }
     }
   },
   mounted() {
+    this.img();
     //console.log(this.$route.path);
     // console.log(this.$router.path);
     let session=sessionStorage.getItem("user");
