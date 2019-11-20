@@ -9,8 +9,8 @@ import Vuex from "@/views/vuex/components/vuex";
 import LifeCycle from "./views/table/LifeCycle";
 import Promise from "./views/table/Promise";
 
-import AddUser from "./views/AddUser";
-import Register from "./views/Register";
+//import AddUser from "./views/AddUser";
+//import Register from "./views/Register";
 
 Vue.use(Router);
 
@@ -30,18 +30,18 @@ export default new Router({
       hidden: true,
       redirect: { name: "login" }
     },
-    {
-      path: "/adduser",
-      name: "adduser", 
-      hidden:true,
-      component:AddUser
-    },
-    {
-      path: "/register",
-      name: "register", 
-      hidden:true,
-      component:Register
-    },
+    // {
+    //   path: "/adduser",
+    //   name: "adduser", 
+    //   hidden:true,
+    //   component:AddUser
+    // },
+    // {
+    //   path: "/register",
+    //   name: "register", 
+    //   hidden:true,
+    //   component:Register
+    // },
     {
       path: "/",
       component: Home,
@@ -62,7 +62,12 @@ export default new Router({
       children: [
         //{ path: "/page4", component: Form, name: "页面4" },
         { path: "/LifeCycle", component: LifeCycle, name: "LifeCycle" }
-      ]
+      ],
+      // beforeEnter:(to,from,next)=>{
+      //   console.log(to);
+      //   console.log(from);
+      //   console.log(next);
+      // }
     },
     {
       path: "/",

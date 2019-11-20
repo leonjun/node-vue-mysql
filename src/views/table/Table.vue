@@ -61,7 +61,7 @@
     <el-table-column
       prop="email"
       label="邮箱"
-     
+      show-overflow-tooltip
       sortable
       >
     </el-table-column>
@@ -240,17 +240,21 @@ export default {
         ids:ids
       }
      // let data=datas.names.split(",")
-     
-      this.$confirm("是否删除所选用户?", "提示", {
+     this.deleteUser(datas)
+      
+    },
+    deleteUser(param){
+      this.$confirm("是否删除该用户?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }) .then(() => {
-          batchDelete(datas).then(res => {
+          batchDelete(param).then(res => {
             this.$message({
               type: "success",
               message: "删除成功!"
             });
+
             this.getUsers();
           });
         }).catch(() => {
@@ -258,7 +262,8 @@ export default {
             type: "info",
             message: "已取消删除"
           });
-        });
+      });
+
     },
     //编辑关闭X
     editClose(){
@@ -302,29 +307,17 @@ export default {
         });
         return
       }
-      let data = {
-        id: row.id
-      };
-      
-      this.$confirm("是否删除该用户?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }) .then(() => {
-          deleteUser(data).then(res => {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
 
-            this.getUsers();
-          });
-        }).catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+     
+      let datas={
+        ids:[row.id]
+      }
+      this.deleteUser(datas)
+      // let data = {
+      //   id: row.id
+      // };
+      
+      
     },
     
     //获取用户列表
@@ -454,9 +447,7 @@ export default {
   .el-form--inline {
     .el-form-item {
       margin-bottom: 0;
-      .el-button{
-        background-color: #42b983;
-      }
+      
     }
   }
 }

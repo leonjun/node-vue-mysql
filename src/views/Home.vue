@@ -1,25 +1,51 @@
 <template>
  <el-row class="container">
    <!--顶部-->
-     <el-menu  class="el-menu-demo head" background-color="#42b983">
-  <el-col :span="5" >
-				<div :class="isCollapse?'tools2':'tools'" @click="collapse">
-					<i class="fa fa-align-justify"></i>
-				</div>
-	</el-col>
+    <div class="head">
+      
+      <div :class="isCollapse?'logo2':'logo'">logo</div>
+      <div class="top-nav">
+
+        <div>
+          <div :class="isCollapse?'tools2':'tools'" @click="collapse">
+              <i :class="isCollapse?'fa fa-outdent':'fa fa-indent'"></i>
+          </div>
+        </div>
+        <div class="user-info">
+
+          <el-dropdown trigger="hover">
+              <span class="el-dropdown-link userinfo-inner">{{sysName}}<img class="user-photo" :src="img"/></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>我的消息</el-dropdown-item>
+                <el-dropdown-item>设置</el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        
+
+      </div>
+    </div>
+     <!-- <el-menu  class="el-menu-demo" background-color="#42b983">
+      
+      <el-col :span="5" >
+            <div :class="isCollapse?'tools2':'tools'" @click="collapse">
+              <i class="fa fa-align-justify"></i>
+            </div>
+      </el-col>
+      
+      <el-col :span="4" class="user-info">
+            <el-dropdown trigger="hover">
+              <span class="el-dropdown-link userinfo-inner">{{sysName}}<img class="user-photo" :src="img"/></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>我的消息</el-dropdown-item>
+                <el-dropdown-item>设置</el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+      </el-col>
   
-  <el-col :span="4" class="user-info">
-				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner">{{sysName}}<img class="user-photo" :src="img"/></span>
-					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
-						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-					</el-dropdown-menu>
-				</el-dropdown>
-	</el-col>
-  
-</el-menu>
+    </el-menu> -->
 
 
  <el-col :span="24" class="main">
@@ -83,7 +109,7 @@
 </template>
 
 <script>
-import {mapActions,mapGetters} from 'vuex';
+//import {mapActions,mapGetters} from 'vuex';
 export default {
   data() {
     return {
@@ -95,7 +121,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['changeImg']),
+   // ...mapActions(['changeImg']),
     handleOpen(key, keyPath) {
       //console.log(key, keyPath);
     },
@@ -131,31 +157,30 @@ export default {
   },
   computed:{
     img(){
-      console.log(123123)
-      debugger
+      
       let session=sessionStorage.getItem("user");
     
       if(session){
-      session=JSON.parse(session);
-      
-      this.sysName=session.name;
-      var srcs=this.$store.getters.getImgsrc;
-      
-      if(srcs=="" || srcs==null){
-        srcs="http://127.0.0.1:8080"+session.imgsrc||""
-        this.sysImg=srcs;
-       
-      }else{
-        this.sysImg="http://127.0.0.1:8080"+srcs;
+        session=JSON.parse(session);
+        
+        this.sysName=session.name;
+        var srcs=this.$store.getters.getImgsrc;
+        
+        if(srcs=="" || srcs==null){
+          srcs="http://127.0.0.1:8080"+session.imgsrc||""
+          this.sysImg=srcs;
+        
+        }else{
+          this.sysImg="http://127.0.0.1:8080"+srcs;
+        }
+        
+        
+        return this.sysImg
       }
-      
-      
-      return this.sysImg
-    }
     }
   },
   mounted() {
-    this.img();
+    
     //console.log(this.$route.path);
     // console.log(this.$router.path);
     let session=sessionStorage.getItem("user");
@@ -169,10 +194,12 @@ export default {
       if(srcs=="" || srcs==null){
         srcs="http://127.0.0.1:8080"+session.imgsrc||""
         this.sysImg=srcs;
-        return;
+        
+      }else{
+         this.sysImg="http://127.0.0.1:8080"+srcs;
       }
       
-      this.sysImg="http://127.0.0.1:8080"+srcs;
+     
      
       
     }else{
@@ -190,13 +217,29 @@ export default {
   clear: both;
 }
 .head {
+  background-color: #b512a2;
   height: 60px;
   line-height: 60px;
+  display: flex;
+  flex:1;
+  width:100%;
+  color: white;
+  .top-nav{
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+  }
+  .logo{
+    width: 150px;
+  }
+  .logo2{
+    width:64px;
+  }
 }
 .user-info {
   float: right;
   color: white;
-  
+  margin-right: 40px;
   .userinfo-inner {
     color: white;
     cursor: pointer;
@@ -215,18 +258,18 @@ export default {
   min-height: 400px;
   .el-menu {
     height: 100%;
-    background-color: #e4e8f1;
+    
   }
 }
 .el-menu {
-  background-color: #eef1f6;
+  
   padding-left: 0;
 }
 
 .tools {
-  text-align: left;
+  text-align: center;
   height: 60px;
-  padding-left: 150px;
+  width: 60px;
   line-height: 60px;
   cursor: pointer;
 }
@@ -296,21 +339,15 @@ export default {
     .container-box{
       
       padding: 20px;
-      background-color: #ffffff;
+      
       flex:1;
       overflow-y: scroll;
     }
     
   }
-  .el-submenu__title:hover{
-    background-color: #d1dbe5;
-  }
-  .el-menu-item:hover{
-    background-color: #d1dbe5;
-  }
-  .el-menu-item:focus, .el-menu-item:hover{
-     background-color: #d1dbe5;
-  }
+  
+ 
+  
   
 }
 .el-menu--collapse .el-menu .el-submenu, .el-menu--popup{

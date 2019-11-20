@@ -2,12 +2,12 @@
  
      <!--新增弹窗-->
     <el-dialog :title="isAdd?'新增':'编辑'"  :visible.sync="showshow" @close="close">
-      <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrule">
+      <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrule" :disabled="addForm.level===1">
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name"></el-input>
+          <el-input v-model="addForm.name" :disabled="addForm.level==1"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password" >
-          <el-input type="password" v-model="addForm.password" show-password></el-input>
+        <el-form-item label="密码" prop="password"  >
+          <el-input type="password" v-model="addForm.password" show-password ></el-input>
         </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="addForm.sex">
@@ -34,12 +34,13 @@
           <el-upload
             name="file"
             class="avatar-uploader"
-            action="http://localhost:8080/api/user/img"
+            action="/api/user/img"
             accept="image/*"
             :show-file-list="false"
             :on-remove="remove"
             :on-error="error"
             :on-success="handleAvatarSuccess"
+            
             :before-upload="beforeUpload"
             :on-change="onChangeUpload"
             :data="uploadData">
@@ -203,7 +204,7 @@ import {updateUser, addUser ,upload} from "@/api/api";
                   type: "success",
                   message: "新增成功!"
                 });
-                this.changeImg(this.addForm.imgsrc);
+                //this.changeImg(this.addForm.imgsrc);
                 this.$refs["addForm"].resetFields();//重置
                 this.imageUrl="";
                // console.log(this.addForm)
@@ -228,6 +229,9 @@ import {updateUser, addUser ,upload} from "@/api/api";
         
         this.$refs.addForm.validate((valid) =>{
         if(valid){
+            let session=sessionStorage.getItem("user");
+            session=JSON.parse(session);
+            
             this.$confirm("确认提交?", "提示", {}).then(() => {
             let data = Object.assign({}, this.addForm);
 
@@ -244,7 +248,15 @@ import {updateUser, addUser ,upload} from "@/api/api";
                 message: "修改成功!"
               });
               
-              this.changeImg(this.addForm.imgsrc);
+              if(this.addForm.id==session.id){
+                
+               //sessionStorage.setItem("imgsrc",this.addForm.imgsrc)  
+                session.imgsrc=this.addForm.imgsrc
+                
+                sessionStorage.setItem("user", JSON.stringify(session))
+                this.changeImg(this.addForm.imgsrc);
+              }
+              
               this.imageUrl="";
               this.$refs["addForm"].resetFields();//重置
                //console.log(this.addForm)
@@ -271,6 +283,8 @@ import {updateUser, addUser ,upload} from "@/api/api";
    },
    mounted(){
      
+    
+    
    }
  }
 </script>

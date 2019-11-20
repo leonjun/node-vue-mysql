@@ -47,7 +47,7 @@ router.post('/img',upload.single('file'),(req,res)=>{
         }
         fs.writeFile(path.join(__dirname,'../static/img/'+name),data,(err)=>{
             if(err){
-                res.send("失败了");
+                res.status(500).send({data:err,msg:"失败了"});
                 
                 return;
             }else{
@@ -156,7 +156,8 @@ router.post('/userListPage',(request,response)=>{
     let sql=$sql.user.query;
     let params=request.body;
     if(params.name!=""){
-        sql+= ` and a.name = '${params.name}'`;
+        sql+= ' and a.name like ' +`'%${params.name}%'`;
+        console.log(sql)
     }
     
     conn.query(sql,(err,result)=>{
