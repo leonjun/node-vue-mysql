@@ -27,6 +27,16 @@ export const addUser = params => {
 export const upload = params => {
     return axios.post('/api/user/img', params).then(res => res); 
 };
+export const addfwb = params => {
+    return axios.post('/api/user/addUditor', params).then(res => res); 
+};
+export const fwblist = params => {
+    return axios.post('/api/user/queryUditor', params).then(res => res); 
+};
+export const deletefwb = params => {
+    return axios.post('/api/user/deletefwb', params).then(res => res); 
+};
+
 
 export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };
 

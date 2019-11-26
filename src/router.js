@@ -8,6 +8,8 @@ import Echart from "./views/table/Echarts";
 import Vuex from "@/views/vuex/components/vuex";
 import LifeCycle from "./views/table/LifeCycle";
 import Promise from "./views/table/Promise";
+import Form from "./views/table/Form";
+import EditList from "./views/table/EditList";
 
 //import AddUser from "./views/AddUser";
 //import Register from "./views/Register";
@@ -76,6 +78,26 @@ export default new Router({
       leaf:true,
       children: [
         { path: "/promise", component: Promise, name: "Promise" ,leaf:true,},
+        
+      ]
+    },
+    {
+      path: "/",
+      component: Home,     
+      iconCls: "fa fa-file", //图标样式class
+      leaf:true,
+      children: [
+        { path: "/tinymce", component: Form, name: "富文本" ,leaf:true,},
+        
+      ]
+    },
+    {
+      path: "/",
+      component: Home,     
+      iconCls: "fa fa-file", //图标样式class
+      leaf:true,
+      children: [
+        { path: "/editlist", component: EditList, name: "富文本列表" ,leaf:true,},
         
       ]
     },

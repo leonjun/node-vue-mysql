@@ -2,7 +2,7 @@
  
      <!--新增弹窗-->
     <el-dialog :title="isAdd?'新增':'编辑'"  :visible.sync="showshow" @close="close">
-      <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrule" :disabled="addForm.level===1">
+      <el-form :model="addForm" ref="addForm" class="edit-add" :rules="addrule" :disabled="addForm.level==1">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name" :disabled="addForm.level==1"></el-input>
         </el-form-item>

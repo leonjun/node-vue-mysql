@@ -104,7 +104,9 @@
    
   
  </el-col> 
-
+  <footer>
+    <a href="http://beian.miit.gov.cn/" target="_blank" class="item">蜀ICP备19037277号-1</a>
+  </footer>
  </el-row>
 </template>
 
@@ -213,6 +215,16 @@ export default {
 </script>
 
 <style lang="scss">
+footer{
+    position: absolute;
+    bottom: 0;
+    text-align: right;
+    width: 100%;
+    a{
+      color:rgba(0,0,0,0.3);
+      text-decoration: none;
+    }
+}
 .clear{
   clear: both;
 }

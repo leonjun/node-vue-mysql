@@ -249,4 +249,65 @@ router.post('/batchDelete',(request,response)=>{
         response.status(500).send('id为空')
     }
 })
+//富文本添加
+router.post('/addUditor',(request,response)=>{
+    let sql= $sql.user.addUditor;
+    let params = request.body;
+    if(params.title=="" || params.container==""){
+        response.status(500).send("标题或者内容不能为空");
+        return;
+    }
+    
+    conn.query(sql,[params.title,params.container],(err,result)=>{
+        if(err){
+            
+            response.status(500).send(err);
+                             
+        }
+        if(result){
+            response.json({"BK_STATUS":"00","msg":"成功"})          
+        }
+    }) 
+})
+//富文本查询
+router.post('/queryUditor',(request,response)=>{
+    let sql= $sql.user.queryUditor;
+    conn.query(sql,(err,result)=>{
+            
+        if(err){
+            response.send(err)          
+           return;                
+        }
+        if(result){
+            
+            let params=request.body;
+            let {page, pagesize} = params
+             
+             let total = result.length;
+             result = result.filter((u, index) => index < pagesize * page && index >= pagesize * (page - 1));
+             response.json({"BK_STATUS":"00","msg":"成功","total":total,data:result})
+            //response.json({"BK_STATUS":"00","msg":"成功",data:result})
+        }
+    })
+})
+//删除富文本
+router.post('/deletefwb',(request,response)=>{
+    let sql =$sql.user.deletefwb;
+    let params=request.body;
+    
+    if(params.id!=""){
+        conn.query(sql,[params.id],(err,result)=>{
+            if(err){
+                response.send(err)
+                return;
+            }
+            if(result){
+                response.json({"BK_STATUS":"00","msg":"成功"})
+            }
+        })
+
+    }else{
+        response.status(500).send('id为空')
+    }
+})
 module.exports=router;
