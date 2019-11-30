@@ -169,11 +169,11 @@ export default {
         var srcs=this.$store.getters.getImgsrc;
         
         if(srcs=="" || srcs==null){
-          srcs="http://127.0.0.1:8080"+session.imgsrc||""
+          srcs=session.imgsrc||""
           this.sysImg=srcs;
         
         }else{
-          this.sysImg="http://127.0.0.1:8080"+srcs;
+          this.sysImg=srcs;
         }
         
         
@@ -194,11 +194,11 @@ export default {
       var srcs=this.$store.getters.getImgsrc;
      
       if(srcs=="" || srcs==null){
-        srcs="http://127.0.0.1:8080"+session.imgsrc||""
+        srcs=session.imgsrc||""
         this.sysImg=srcs;
         
       }else{
-         this.sysImg="http://127.0.0.1:8080"+srcs;
+         this.sysImg=srcs;
       }
       
      

@@ -13,5 +13,5 @@ app.use(express.static(path.join(__dirname,"./static")))
 
 app.use('/api/user',userApi)
 
-app.listen(3000)
+app.listen(1234)
 console.log(123)

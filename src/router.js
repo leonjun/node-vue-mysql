@@ -10,6 +10,7 @@ import LifeCycle from "./views/table/LifeCycle";
 import Promise from "./views/table/Promise";
 import Form from "./views/table/Form";
 import EditList from "./views/table/EditList";
+import notFound from './views/table/404'
 
 //import AddUser from "./views/AddUser";
 //import Register from "./views/Register";
@@ -110,6 +111,18 @@ export default new Router({
         { path: "/echart", component: Echart, name: "eCharts"},
         
       ]
-    }
+    },
+    
+    {
+      path: "/404",
+      name: "notFound",
+      component: notFound,
+      hidden: true,
+      }, 
+      {
+      path: "*", // 此处需特别注意置于最底部
+      redirect: "/404",
+      hidden: true,
+      }
   ]
 });
