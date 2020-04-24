@@ -4,7 +4,9 @@
           <li v-for="item in list" :key="item.id">
               <h3>{{item.title}}</h3>
               <p v-html="item.container">{{item.container}}</p>
+              <p>{{item.fdate}}</p>
               <el-button type="primary" @click.native="deletefwb(item.id)">删除</el-button>
+              <el-button type="primary" @click.native="updatefwb(item)">编辑</el-button>
           </li>
       </ul>
       <ul v-else>
@@ -24,19 +26,25 @@
             :total="this.pages.total">
         </el-pagination>
       </el-col>
+      <el-dialog :visible.sync="showTinymc">
+        <input v-model="editData.title"/>
+        <TinymceEditor v-model="editData.container"></TinymceEditor>
+        <el-button type="primary" @click.native="submitUp()">确认</el-button>
+      </el-dialog>
   </div>
   
 </template>
 
 <script>
-import {deletefwb, fwblist} from "@/api/api";
-
+import {deletefwb, fwblist,updatefwb} from "@/api/api";
+import TinymceEditor from '@/components/Tinymce';
 export default {
   components:{
-    
+      TinymceEditor
   },
   data() {
     return {
+      showTinymc:false,
       listLoading:false,
       haslist:false,
       list:[],
@@ -46,6 +54,11 @@ export default {
         pagesize: 10,
         
       },
+      editData:{
+        title:"",
+        container:"",
+        id:""
+      }
     }
   },
   methods: {
@@ -98,8 +111,37 @@ export default {
             this.listLoading = false;
         });
     },
-    
-    
+    updatefwb:function(re){
+      this.showTinymc=true;
+      this.editData.title=re.title;
+      this.editData.container=re.container;
+      this.editData.id=re.id;
+    },
+    submitUp:function(){
+      let data=this.editData;
+      this.listLoading = true;
+      
+      updatefwb(data).then(res => {
+         
+        if(res.data.BK_STATUS=="00"){
+            this.showTinymc=false;
+            this.getList();
+        }else{
+          this.$message({
+                  type: "error",
+                  message: res.data.msg
+        }); 
+        }
+        
+        this.listLoading = false;
+       
+        
+        
+      }).catch(err=>{
+        console.log(res)
+        this.listLoading = false;
+      });
+    },
     //获取列表
     getList() {
       let data = {

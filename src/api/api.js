@@ -36,6 +36,9 @@ export const fwblist = params => {
 export const deletefwb = params => {
     return axios.post('/api/user/deletefwb', params).then(res => res); 
 };
+export const updatefwb = params => {
+    return axios.post('/api/user/updatefwb', params).then(res => res); 
+};
 
 
 export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };

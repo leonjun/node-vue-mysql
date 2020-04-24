@@ -28,10 +28,10 @@ function formatDate(date) {
     var YY = date.getFullYear() + '-';
     var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
     var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
-    var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
-    var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
-    var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
-    return YY + MM + DD +" "+hh + mm + ss;
+    // var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    // var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    // var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+    return YY + MM + DD;
 }
 var imgsrc;
 router.post('/img',upload.single('file'),(req,res)=>{
@@ -253,12 +253,14 @@ router.post('/batchDelete',(request,response)=>{
 router.post('/addUditor',(request,response)=>{
     let sql= $sql.user.addUditor;
     let params = request.body;
+    let dt= new Date().getTime()
+    params.fdate = formatDate(dt);
     if(params.title=="" || params.container==""){
         response.status(500).send("标题或者内容不能为空");
         return;
     }
     
-    conn.query(sql,[params.title,params.container],(err,result)=>{
+    conn.query(sql,[params.title,params.container,params.fdate],(err,result)=>{
         if(err){
             
             response.status(500).send(err);
@@ -297,6 +299,31 @@ router.post('/deletefwb',(request,response)=>{
     
     if(params.id!=""){
         conn.query(sql,[params.id],(err,result)=>{
+            if(err){
+                response.send(err)
+                return;
+            }
+            if(result){
+                response.json({"BK_STATUS":"00","msg":"成功"})
+            }
+        })
+
+    }else{
+        response.status(500).send('id为空')
+    }
+})
+//编辑富文本
+router.post('/updatefwb',(request,response)=>{
+    let sql =$sql.user.updatefwb;
+    let params=request.body;
+    let dt= new Date().getTime()
+    params.fdate = formatDate(dt);
+    if(params.id!=""){
+        if(params.container==""){
+            response.json({"BK_STATUS":"01","msg":"内容为空"});
+            return;
+        }
+        conn.query(sql,[params.id,params.title,params.container,params.fdate],(err,result)=>{
             if(err){
                 response.send(err)
                 return;

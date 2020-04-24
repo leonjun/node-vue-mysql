@@ -5,9 +5,10 @@ var sqlMap={
         delete:'delete from user where id = ?',
         update:'update user set name=?,password=?,email=?,phone=?,sex=?,address=?,last_md_dt=? ,imgsrc=?,level=? where id=?',
         batchDelete:'delete from user  where id=?',
-        addUditor:'insert into editor(title,container) values(?,?)',
+        addUditor:'insert into editor(title,container,fdate) values(?,?,?)',
         queryUditor:'select * from editor',
-        deletefwb:'delete from editor where id=?'
+        deletefwb:'delete from editor where id=?',
+        updatefwb:'update editor set id=? , title=? , container=? , fdate=?'
     }
 }
 module.exports=sqlMap

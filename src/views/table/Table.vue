@@ -277,7 +277,13 @@ export default {
     },
     //编辑按钮（外部页面）
     handleEditout(index, row){
-      //console.log(row)
+      console.log(row)
+      let session=sessionStorage.getItem('user');
+       session=JSON.parse(session)
+       if(row.name!=session.name){
+         alert("不能编辑别人")
+         return
+       }
       this.addtestshow=true;
       this.$nextTick(()=>{
         
