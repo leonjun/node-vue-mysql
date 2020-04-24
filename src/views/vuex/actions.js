@@ -14,5 +14,9 @@ export default {
     },
     setImg({commit},imgsrc){
         commit(type.IMGSRC,imgsrc);
+    },
+    setUserInfo({commit},userInfo){
+        commit(type.USERINFO,userInfo);
     }
+
 }

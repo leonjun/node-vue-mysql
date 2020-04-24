@@ -4,7 +4,8 @@ export default {
     state:{
         todoInfos:[],
         selects:"1",
-        imgsrc:""
+        imgsrc:"",
+        userInfo:{}
     },
     actions:actions,
     mutations:mutations,
@@ -29,6 +30,9 @@ export default {
             //console.log(12123123123)
             //console.log(state)
             return state.imgsrc;
+        },
+        getUserInfo:function(state){
+            return state.userInfo;
         }
     }
 }

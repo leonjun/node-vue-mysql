@@ -35,7 +35,7 @@
 
 import {requestLogin,userListPage,upload} from '@/api/api';
 import GVerify from "@/utils/gVerify.js";
-
+import {mapActions} from 'vuex';
 export default {
   name: 'login',
   components: {
@@ -71,7 +71,7 @@ export default {
        this.verifyCode = new GVerify("v_container");
   },
   methods:{
-    
+    ...mapActions(['setUserInfo']),
     que(){
       var data={
         page:1,
@@ -103,6 +103,7 @@ export default {
                 requestLogin(loginParams).then(data => {
                   //console.log(data)
                   if(data.data.BK_STATUS=="00"){
+                      this.setUserInfo(data.data.data[0]);
                       sessionStorage.setItem('user', JSON.stringify(data.data.data[0]));
                       this.$router.push({ path: '/table' });
                   }else{

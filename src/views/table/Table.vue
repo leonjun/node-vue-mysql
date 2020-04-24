@@ -280,8 +280,11 @@ export default {
       console.log(row)
       let session=sessionStorage.getItem('user');
        session=JSON.parse(session)
-       if(row.name!=session.name){
-         alert("不能编辑别人")
+       if(session.level>row.level){
+         this.$message({
+            type: "error",
+            message: "不能编辑级别你高的人!"
+        });
          return
        }
       this.addtestshow=true;
@@ -303,6 +306,13 @@ export default {
         this.$message({
             type: "error",
             message: "不能删除本人!"
+        });
+        return
+      }
+      if(row.level=="1"){
+        this.$message({
+            type: "error",
+            message: "不能删除此账号!"
         });
         return
       }

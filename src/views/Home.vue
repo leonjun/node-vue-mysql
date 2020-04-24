@@ -55,7 +55,8 @@
 
     
     <el-menu  :default-active="this.$route.path" :unique-opened="true"  router  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"  @select="handleselect" :collapse="isCollapse">
-        <template v-for="(item,index) in this.$router.options.routes" >
+        
+        <template v-for="(item,index) in routes" >
           <template v-if="!item.hidden">
           <el-submenu  :index="index+''"  :key="index" v-if="!item.leaf">
             <template slot="title">
@@ -69,10 +70,10 @@
               </el-menu-item>
               
             </el-menu-item-group>          
-          </el-submenu>          
+          </el-submenu> 
+          
           <el-menu-item v-if="item.leaf&&item.children.length>0" :key="index" :index="item.children[0].path"><i :class="item.iconCls"></i><span slot="title">{{item.children[0].name}}</span></el-menu-item>
-          </template>
-        
+          </template>                 
         </template>
 
     </el-menu>
@@ -120,6 +121,8 @@ export default {
       isCollapse: false,
       sysName:"",
       sysImg:"",
+     
+      routes:[]
     };
   },
   methods: {
@@ -183,14 +186,33 @@ export default {
   },
   mounted() {
     
-    //console.log(this.$route.path);
-    // console.log(this.$router.path);
+    
+    this.routes=this.$router.options.routes;
     let session=sessionStorage.getItem("user");
+    let routers=this.routes;
+    routers=routers.filter(o=>!o.hidden);
+    
     
     if(session){
       session=JSON.parse(session);
       
       this.sysName=session.name;
+      if(session.id!="999999"){
+        
+        let r1=routers.filter(a=>!a.leaf);
+        let r2=routers.filter(a=>a.leaf);
+        for(var i=0;i<r2.length;i++){
+          r2[i].children=r2[i].children.filter(c=>c.name!="富文本");
+          r2[i].children=r2[i].children.filter(c=>c.name!="富文本列表")
+        }
+        
+        this.routes=[...r1,...r2];
+      }
+      console.log(this.routes)
+      this.userId=session.id;
+      this.isId= (this.userId==this.iddd);
+
+
       var srcs=this.$store.getters.getImgsrc;
      
       if(srcs=="" || srcs==null){
@@ -207,7 +229,6 @@ export default {
     }else{
       this.$router.push({ path: '/login' });
     }
-   // console.log(this.changeImg())
    
     
   }

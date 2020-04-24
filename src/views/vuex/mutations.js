@@ -21,5 +21,9 @@ export default {
     [type.IMGSRC](state,imgsrc){
         state.imgsrc=imgsrc;
         
+    },
+    [type.USERINFO](state,userInfo){
+        state.userInfo=userInfo;
+        
     }
 }
