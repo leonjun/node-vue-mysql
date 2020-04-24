@@ -208,7 +208,7 @@ export default {
         
         this.routes=[...r1,...r2];
       }
-      console.log(this.routes)
+     
       this.userId=session.id;
       this.isId= (this.userId==this.iddd);
 
